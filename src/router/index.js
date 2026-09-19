@@ -4,6 +4,18 @@ import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to, from, savedPosition) {
+    // ถ้าใช้ Lenis ให้ใช้คำสั่งของ Lenis ในการเลื่อนขึ้นบนสุด
+    if (window.lenis) {
+      window.lenis.scrollTo(0, { immediate: true })
+    }
+    
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0, behavior: 'smooth' }
+    }
+  },
   routes: [
     {
       path: ROUTES.HOME,

@@ -197,14 +197,15 @@ export class WixBlogRepository {
     }
   }
 
-  async toggleLike(id, action) {
+  async toggleLike(id, token) {
     try {
       const response = await fetch(`${BASE_URL}/toggleLike`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ postId: id, action }) // action: 'like' | 'unlike'
+        body: JSON.stringify({ postId: id })
       })
 
       if (!response || !response.ok) {
