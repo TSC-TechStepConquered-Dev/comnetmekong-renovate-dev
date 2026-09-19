@@ -63,7 +63,65 @@ const scrollToSection = () => {
 onMounted(async () => {
   latestBlogs.value = await blogStore.fetchLatestBlogs()
   loadingBlogs.value = false
+  fetchDonors()
 })
+
+// Helper: Convert wix:image:// URL to standard https URL
+const convertWixImageUrl = (wixUrl) => {
+  if (!wixUrl) return ''
+  if (typeof wixUrl !== 'string') return ''
+  if (wixUrl.startsWith('http')) return wixUrl
+  if (wixUrl.startsWith('wix:image://v1/')) {
+    const parts = wixUrl.split('/')
+    if (parts.length >= 4) {
+      return `https://static.wixstatic.com/media/${parts[3]}`
+    }
+  }
+  return wixUrl
+}
+
+// Donors Data Fetching
+const donors = ref([])
+const loadingDonors = ref(true)
+const BASE_URL = import.meta.env.VITE_WIX_BASE_URL || 'https://www.comnetmekong.org/_functions'
+
+const MOCK_DONORS = Array.from({ length: 13 }).map((_, i) => ({
+  id: `mock_donor_${i+1}`,
+  name: `Donor ${i+1}`,
+  logoUrl: '', // Using empty string to show placeholder style
+  link: '#'
+}))
+
+const fetchDonors = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/donors`).catch(() => null)
+    if (!response || !response.ok) {
+      donors.value = MOCK_DONORS
+      return
+    }
+    const result = await response.json()
+    const items = result.items || result.data || result
+    
+    if (Array.isArray(items) && items.length > 0) {
+      // เรียงลำดับตาม _createdDate หรือ _updatedDate ถ้าต้องการ หรือตาม order
+      const sortedItems = items.sort((a, b) => (a.order || 0) - (b.order || 0))
+      
+      donors.value = sortedItems.map(item => ({
+        id: item._id,
+        name: item.name || 'Donor',
+        logoUrl: convertWixImageUrl(item.logoUrl || item.logo || item.image || ''),
+        link: item.link || item.url || '#'
+      }))
+    } else {
+      donors.value = MOCK_DONORS
+    }
+  } catch (error) {
+    console.warn('Error fetching donors, using mock', error)
+    donors.value = MOCK_DONORS
+  } finally {
+    loadingDonors.value = false
+  }
+}
 </script>
 
 <template>
@@ -279,62 +337,36 @@ onMounted(async () => {
       <div class="bg-white rounded-[5px] shadow-lg border border-stone-100 p-8 md:p-12">
         
         <!-- Grid for Logos -->
-        <!-- * คุณสามารถนำ <img> และ <a> มาใส่แทนกล่องสีเทาด้านล่างนี้ได้เลยครับ * -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-center justify-items-center opacity-60">
+        <!-- Loading State -->
+        <div v-if="loadingDonors" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-center justify-items-center opacity-60">
+          <div v-for="i in 10" :key="i" class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-200 animate-pulse rounded-[5px]"></div>
+        </div>
+
+        <!-- Data Loaded -->
+        <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-center justify-items-center">
           
-          <!-- Placeholder 1 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 1
-          </div>
-          <!-- Placeholder 2 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 2
-          </div>
-          <!-- Placeholder 3 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 3
-          </div>
-          <!-- Placeholder 4 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 4
-          </div>
-          <!-- Placeholder 5 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 5
-          </div>
-          <!-- Placeholder 6 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 6
-          </div>
-          <!-- Placeholder 7 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 7
-          </div>
-          <!-- Placeholder 8 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 8
-          </div>
-          <!-- Placeholder 9 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 9
-          </div>
-          <!-- Placeholder 10 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 10
-          </div>
-          <!-- Placeholder 11 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 11
-          </div>  
-          <!-- Placeholder 12 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 12
-          </div>
-          <!-- Placeholder 13 -->
-          <div class="w-32 md:w-40 lg:w-48 aspect-square bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 flex items-center justify-center text-stone-400 text-sm">
-            Logo 13
-          </div>
-          
+          <a 
+            v-for="donor in donors" 
+            :key="donor.id" 
+            :href="donor.link && donor.link !== '#' ? donor.link : null"
+            :target="donor.link && donor.link !== '#' ? '_blank' : null"
+            class="w-32 md:w-40 lg:w-48 aspect-square flex items-center justify-center transition-transform duration-300 hover:scale-110"
+            :class="{ 
+              'bg-stone-100 rounded-[5px] border-2 border-dashed border-stone-300 text-stone-400 text-sm': !donor.logoUrl,
+              'cursor-default': !donor.link || donor.link === '#'
+            }"
+            :title="donor.name"
+            @click="!donor.link || donor.link === '#' ? $event.preventDefault() : null"
+          >
+            <img 
+              v-if="donor.logoUrl" 
+              :src="donor.logoUrl" 
+              :alt="donor.name" 
+              class="max-w-full max-h-full object-contain transition-transform duration-300" 
+            />
+            <span v-else>{{ donor.name }}</span>
+          </a>
+
         </div>
 
         <p class="text-center text-stone-400 mt-10 text-sm font-medium uppercase tracking-widest">

@@ -129,14 +129,17 @@ const fetchBlog = async () => {
     likeCount.value = data.likes || 0
     loading.value = false
     
-    // ถ้าล็อกอินอยู่ ให้เช็กว่าเคยกดไลก์บทความนี้ไปแล้วหรือยัง
-    if (authStore.isAuthenticated && authStore.token) {
-      const alreadyLiked = await blogRepo.checkLike(blog.value.id, authStore.token)
-      isLiked.value = alreadyLiked
-    }
+    // ใช้ LocalStorage เพื่อจำสถานะการไลก์ (ไม่ต้องใช้ระบบสมาชิก)
+    const likedPosts = JSON.parse(localStorage.getItem('liked_posts') || '[]')
+    isLiked.value = likedPosts.includes(blog.value.id)
     
     // Call view increment
     await blogRepo.incrementView(id)
+    
+    // เพิ่มยอดวิวในหน้าจอทันทีเพื่อให้เห็นการเปลี่ยนแปลง
+    if (blog.value && typeof blog.value.views === 'number') {
+      blog.value.views++
+    }
   } catch (err) {
     error.value = err.message
   } finally {
@@ -169,29 +172,37 @@ const relatedBlogs = computed(() => {
 })
 
 const handleLike = async () => {
-  if (!authStore.isAuthenticated) {
-    showModal({
-      title: 'ต้องการเข้าสู่ระบบ',
-      message: 'กรุณาเข้าสู่ระบบก่อนกดถูกใจบทความ',
-      type: 'login',
-      confirmText: 'เข้าสู่ระบบ',
-      cancelText: 'ไว้ทีหลัง'
-    })
-    return
-  }
-  
   isLiking.value = true
+  
+  // กำหนด action ที่จะส่งไปให้ backend
+  const action = isLiked.value ? 'unlike' : 'like'
+  
+  // จำลองอัปเดต UI ทันที (Optimistic update)
+  isLiked.value = !isLiked.value
+  likeCount.value += isLiked.value ? 1 : -1
+  
   try {
-    const result = await blogRepo.toggleLike(blog.value.id, authStore.token)
+    // ส่งข้อมูลไปอัปเดต BlogStats (บวก/ลบ)
+    const result = await blogRepo.toggleLike(blog.value.id, action)
     
     if (result && typeof result.totalLikes === 'number') {
-      isLiked.value = result.liked
       likeCount.value = result.totalLikes
-    } else {
-      isLiked.value = !isLiked.value
-      likeCount.value += isLiked.value ? 1 : -1
     }
+    
+    // บันทึกสถานะลง LocalStorage
+    let likedPosts = JSON.parse(localStorage.getItem('liked_posts') || '[]')
+    if (isLiked.value) {
+      if (!likedPosts.includes(blog.value.id)) likedPosts.push(blog.value.id)
+    } else {
+      likedPosts = likedPosts.filter(id => id !== blog.value.id)
+    }
+    localStorage.setItem('liked_posts', JSON.stringify(likedPosts))
+    
   } catch (error) {
+    // ถ้ายิง API พัง ให้ revert กลับ
+    isLiked.value = !isLiked.value
+    likeCount.value += isLiked.value ? 1 : -1
+    
     showModal({
       title: 'ผิดพลาด',
       message: 'เกิดข้อผิดพลาดในการกดถูกใจ',

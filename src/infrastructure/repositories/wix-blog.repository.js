@@ -197,19 +197,18 @@ export class WixBlogRepository {
     }
   }
 
-  async toggleLike(id, token) {
+  async toggleLike(id, action) {
     try {
       const response = await fetch(`${BASE_URL}/toggleLike`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ postId: id })
-      }).catch(() => null)
+        body: JSON.stringify({ postId: id, action }) // action: 'like' | 'unlike'
+      })
 
       if (!response || !response.ok) {
-        return { status: 'success', data: { isLiked: true } }
+        throw new Error('ไม่สามารถอัปเดตข้อมูลการกดถูกใจได้')
       }
       return await response.json()
     } catch (error) {
