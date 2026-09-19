@@ -10,45 +10,13 @@ const route = useRoute()
 
 const menuItems = [
   { name: 'หน้าแรก', path: ROUTES.HOME },
-  { name: 'เกี่ยวกับเรา', path: '#' },
+  { name: 'เกี่ยวกับเรา', path: ROUTES.ABOUT },
   { name: 'งานของเรา', path: '#' },
   { name: 'Hug Mekong Youth', path: '#' },
   { name: 'มัลติมีเดีย', path: '#' },
   { name: 'คนฮักโขง', path: '#' },
   { name: 'การบริจาค', path: '#' }
 ]
-
-const activeMenu = ref(null)
-let timeout = null
-
-const handleMouseEnter = (name) => {
-  clearTimeout(timeout)
-  if (['เกี่ยวกับเรา', 'งานของเรา', 'มัลติมีเดีย'].includes(name)) {
-    activeMenu.value = name
-  } else {
-    activeMenu.value = null
-  }
-}
-
-const handleMenuClick = (name) => {
-  if (['เกี่ยวกับเรา', 'งานของเรา', 'มัลติมีเดีย'].includes(name)) {
-    activeMenu.value = activeMenu.value === name ? null : name
-  } else {
-    activeMenu.value = null
-  }
-}
-
-const handleMouseLeave = () => {
-  timeout = setTimeout(() => {
-    activeMenu.value = null
-  }, 150)
-}
-
-const cancelTimeout = () => {
-  if (timeout) {
-    clearTimeout(timeout)
-  }
-}
 
 const showLogoutModal = ref(false)
 const profileDropdownOpen = ref(false)
@@ -60,9 +28,6 @@ const toggleProfileDropdown = () => {
 const closeNavDropdowns = (e) => {
   if (!e.target.closest('.profile-dropdown-wrapper')) {
     profileDropdownOpen.value = false
-  }
-  if (!e.target.closest('.mega-menu-trigger') && !e.target.closest('.mega-menu-content')) {
-    activeMenu.value = null
   }
 }
 
@@ -108,14 +73,13 @@ const openProfileModal = () => {
 </script>
 
 <template>
-  <header class="absolute top-0 left-0 w-full z-50 px-4 py-6 md:px-8" @mouseleave="handleMouseLeave">
+  <header class="absolute top-0 left-0 w-full z-50 px-4 py-6 md:px-8">
     <div class="max-w-7xl mx-auto relative">
       <!-- Main Header Pill -->
-      <div class="relative z-20 flex items-center justify-between bg-black/20 backdrop-blur-md border border-white/10 rounded-full px-6 py-3 shadow-lg transition-colors duration-300"
-           :class="{'bg-black/40': activeMenu}">
+      <div class="relative z-20 flex items-center justify-between bg-black/20 backdrop-blur-md border border-white/10 rounded-full px-6 py-3 shadow-lg transition-colors duration-300">
         
         <!-- Logo Area -->
-        <RouterLink :to="ROUTES.HOME" class="flex items-center gap-3 group shrink-0" @mouseenter="activeMenu = null">
+        <RouterLink :to="ROUTES.HOME" class="flex items-center gap-3 group shrink-0">
           <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden shrink-0">
             <img src="../../../assets/logo_2.avif" alt="Hugmekong Logo" class="w-8 h-8 object-contain" />
           </div>
@@ -130,8 +94,6 @@ const openProfileModal = () => {
           <div 
             v-for="item in menuItems" 
             :key="item.name"
-            class="mega-menu-trigger"
-            @mouseenter="handleMouseEnter(item.name)"
           >
             <RouterLink 
               v-if="item.path !== '#'"
@@ -141,19 +103,18 @@ const openProfileModal = () => {
             >
               {{ item.name }}
             </RouterLink>
-            <button 
+            <a 
               v-else
-              @click.stop="handleMenuClick(item.name)"
-              class="block px-4 py-3 text-sm font-medium transition-colors cursor-pointer"
-              :class="activeMenu === item.name ? 'text-amber-300' : 'text-white/90 hover:text-white'"
+              :href="item.path"
+              class="block px-4 py-3 text-sm font-medium transition-colors cursor-pointer text-white/90 hover:text-white"
             >
               {{ item.name }}
-            </button>
+            </a>
           </div>
         </nav>
 
         <!-- Right Side: Login/User Area & Mobile Toggle -->
-        <div class="flex items-center gap-2" @mouseenter="activeMenu = null">
+        <div class="flex items-center gap-2">
           
           <!-- Auth Area (Desktop & Mobile) -->
           <template v-if="authStore.isAuthenticated && authStore.user">
@@ -232,76 +193,6 @@ const openProfileModal = () => {
           >
             {{ item.name }}
           </RouterLink>
-        </div>
-      </div>
-
-      <!-- Mega Menu Dropdown -->
-      <div 
-        class="mega-menu-content hidden lg:block absolute left-0 top-full mt-2 w-full z-10 transition-all duration-300 ease-out origin-top"
-        :class="activeMenu ? 'opacity-100 translate-y-0 visible pointer-events-auto' : 'opacity-0 -translate-y-4 invisible pointer-events-none'"
-        @mouseenter="cancelTimeout"
-      >
-        <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-10 mx-auto w-full max-w-5xl">
-          
-          <!-- Content changes based on active menu -->
-          <div v-if="activeMenu === 'เกี่ยวกับเรา'" class="grid grid-cols-3 gap-8">
-            <div>
-              <h3 class="text-sm font-bold text-stone-900 mb-4 uppercase tracking-wider">องค์กรของเรา</h3>
-              <ul class="space-y-3">
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">ประวัติความเป็นมา</a></li>
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">วิสัยทัศน์และพันธกิจ</a></li>
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">โครงสร้างองค์กร</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 class="text-sm font-bold text-stone-900 mb-4 uppercase tracking-wider">คณะทำงาน</h3>
-              <ul class="space-y-3">
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">คณะกรรมการบริหาร</a></li>
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">ทีมงานพื้นที่</a></li>
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">ติดต่อเรา</a></li>
-              </ul>
-            </div>
-            <div class="bg-stone-50 rounded-2xl p-6 border border-stone-100">
-              <h3 class="text-sm font-bold text-stone-900 mb-2">เครือข่ายลุ่มน้ำโขง</h3>
-              <p class="text-sm text-stone-500 leading-relaxed">ร่วมขับเคลื่อนประเด็นสิทธิและสิ่งแวดล้อมไปกับเรา</p>
-            </div>
-          </div>
-
-          <div v-else-if="activeMenu === 'งานของเรา'" class="grid grid-cols-4 gap-8">
-            <div>
-              <h3 class="text-sm font-bold text-stone-900 mb-4 uppercase tracking-wider">ประเด็นหลัก</h3>
-              <ul class="space-y-3">
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">สิทธิชุมชน</a></li>
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">การจัดการทรัพยากรน้ำ</a></li>
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">ความหลากหลายทางชีวภาพ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 class="text-sm font-bold text-stone-900 mb-4 uppercase tracking-wider">พื้นที่ปฏิบัติงาน</h3>
-              <ul class="space-y-3">
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">ภาคเหนือ</a></li>
-                <li><a href="#" class="text-sm text-stone-600 hover:text-amber-600 transition-colors">ภาคอีสาน</a></li>
-              </ul>
-            </div>
-            <div class="col-span-2">
-              <h3 class="text-sm font-bold text-stone-900 mb-4 uppercase tracking-wider">แคมเปญล่าสุด</h3>
-              <div class="grid grid-cols-2 gap-4">
-                <a href="#" class="block p-4 rounded-xl hover:bg-stone-50 transition-colors border border-transparent hover:border-stone-200">
-                  <span class="block text-sm font-semibold text-stone-800 mb-1">ปกป้องป่าบุ้งป่าทาม</span>
-                  <span class="block text-xs text-stone-500">เรียนรู้ความสำคัญของพื้นที่ชุ่มน้ำ</span>
-                </a>
-                <a href="#" class="block p-4 rounded-xl hover:bg-stone-50 transition-colors border border-transparent hover:border-stone-200">
-                  <span class="block text-sm font-semibold text-stone-800 mb-1">พลังงานทางเลือก</span>
-                  <span class="block text-xs text-stone-500">เพื่อความยั่งยืนของชุมชน</span>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div v-else class="flex items-center justify-center py-8">
-            <p class="text-stone-500">หัวข้อย่อยสำหรับเมนู {{ activeMenu }} (รอการเพิ่มเติมข้อมูล)</p>
-          </div>
-
         </div>
       </div>
       
