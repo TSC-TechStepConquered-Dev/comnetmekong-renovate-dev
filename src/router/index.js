@@ -34,8 +34,7 @@ const router = createRouter({
       path: '/blogs/:id',
       name: 'blog_detail',
       component: () => import('../views/BlogDetailView.vue'),
-    },
+    }
   ],
 })
-
 export default router

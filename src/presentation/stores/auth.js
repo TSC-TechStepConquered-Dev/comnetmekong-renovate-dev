@@ -78,6 +78,26 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('auth_token')
   }
 
+  async function updateProfile(displayName, currentPassword, newPassword) {
+    try {
+      if (!token.value) throw new Error('กรุณาเข้าสู่ระบบก่อน')
+      const updatedUser = await authRepo.updateProfile(token.value, { displayName, currentPassword, newPassword })
+      
+      // Update local user state
+      if (updatedUser) {
+        user.value = {
+          ...user.value,
+          displayName: updatedUser.displayName,
+          username: updatedUser.username || user.value.username
+        }
+        localStorage.setItem('auth_user', JSON.stringify(user.value))
+      }
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: error.message }
+    }
+  }
+
   return {
     user,
     token,
@@ -86,6 +106,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     register,
     loginWithGoogle,
-    logout
+    logout,
+    updateProfile
   }
 })

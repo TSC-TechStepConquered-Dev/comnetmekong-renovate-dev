@@ -22,3 +22,27 @@ html.lenis, html.lenis body {
 .lenis.lenis-smooth iframe {
   pointer-events: none;
 }
+
+/* รีเซ็ต Margin/Padding ของตัวหน้าเว็บใน iFrame */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden; /* ป้องกันการเลื่อนแนวนอน */
+  box-sizing: border-box;
+}
+
+/* กล่องหน้าแรก */
+.hero-section {
+  width: 100%;
+  min-height: var(--hero-height, 100vh);
+  position: relative;
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

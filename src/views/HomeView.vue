@@ -73,7 +73,7 @@ onMounted(async () => {
     <Navbar />
 
     <!-- Hero Section -->
-    <section class="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+    <section class="hero-section relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
       <!-- Background Image (Placeholder river landscape) -->
       <div class="absolute inset-0 z-0">
         <!-- We use an Unsplash image of a river/bay to match the mockup aesthetic -->

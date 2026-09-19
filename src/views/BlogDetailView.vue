@@ -442,7 +442,7 @@ const handleShare = async () => {
           <div 
             v-for="comment in blog.comments" 
             :key="comment.id" 
-            class="bg-white p-6 rounded-2xl border border-stone-100 shadow-sm flex gap-4 relative overflow-hidden transition-all duration-300"
+            class="bg-white p-6 rounded-2xl border border-stone-100 shadow-sm flex gap-4 relative transition-all duration-300"
             :class="{ 'opacity-50 scale-[0.98]': deletingCommentId === comment.id }"
           >
             <!-- Deleting overlay -->

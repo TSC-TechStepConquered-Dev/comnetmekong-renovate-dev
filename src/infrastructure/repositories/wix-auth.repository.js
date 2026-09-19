@@ -114,4 +114,31 @@ export class WixAuthRepository {
       throw error
     }
   }
+
+  async updateProfile(token, { displayName, currentPassword, newPassword }) {
+    try {
+      const response = await fetch(`${BASE_URL}/updateProfile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ displayName, currentPassword, newPassword })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'ไม่สามารถอัปเดตข้อมูลโปรไฟล์ได้');
+      }
+
+      const result = await response.json();
+      if (result.status !== 'success') {
+        throw new Error(result.message || 'ไม่สามารถอัปเดตข้อมูลโปรไฟล์ได้');
+      }
+
+      return result.user || result.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

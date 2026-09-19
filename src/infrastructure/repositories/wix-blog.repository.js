@@ -303,4 +303,25 @@ export class WixBlogRepository {
     }
     return false
   }
+
+  async getUserInteractions(id, token) {
+    if (!token) return { hasLiked: false, userComments: [] }
+    try {
+      const response = await fetch(`${BASE_URL}/userInteractions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ postId: id })
+      }).catch(() => null)
+      
+      if (response && response.ok) {
+        return await response.json()
+      }
+    } catch (err) {
+      console.warn('Error fetching user interactions', err)
+    }
+    return { hasLiked: false, userComments: [] }
+  }
 }

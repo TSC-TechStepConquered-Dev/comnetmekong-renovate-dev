@@ -2,8 +2,11 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { ROUTES } from '../../../config/routes'
 import { useAuthStore } from '../../stores/auth'
+import { useRoute } from 'vue-router'
+import ProfileModal from '../profile/ProfileModal.vue'
 
 const authStore = useAuthStore()
+const route = useRoute()
 
 const menuItems = [
   { name: 'หน้าแรก', path: ROUTES.HOME },
@@ -95,6 +98,13 @@ const mobileMenuOpen = ref(false)
 const toggleMobileMenu = () => {
   mobileMenuOpen.value = !mobileMenuOpen.value
 }
+
+const showProfileModal = ref(false)
+const openProfileModal = () => {
+  profileDropdownOpen.value = false
+  mobileMenuOpen.value = false
+  showProfileModal.value = true
+}
 </script>
 
 <template>
@@ -126,7 +136,8 @@ const toggleMobileMenu = () => {
             <RouterLink 
               v-if="item.path !== '#'"
               :to="item.path" 
-              class="block px-4 py-3 text-sm font-medium transition-colors text-white/90 hover:text-white"
+              class="block px-4 py-3 text-sm font-medium transition-colors"
+              :class="route.path === item.path ? 'text-amber-300' : 'text-white/90 hover:text-white'"
             >
               {{ item.name }}
             </RouterLink>
@@ -159,7 +170,7 @@ const toggleMobileMenu = () => {
               <Transition name="dropdown-fade">
                 <div v-if="profileDropdownOpen" class="hidden lg:block absolute right-0 top-full mt-2 w-48 z-50">
                   <div class="bg-white rounded-xl shadow-xl border border-stone-100 py-2 overflow-hidden">
-                    <RouterLink to="#" class="block px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors" @click.stop="profileDropdownOpen = false">โปรไฟล์ของฉัน</RouterLink>
+                    <button @click.stop="openProfileModal" class="w-full text-left block px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors">จัดการโปรไฟล์</button>
                     <button @click.stop="handleLogoutClick" class="w-full text-left block px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">ออกจากระบบ</button>
                   </div>
                 </div>
@@ -193,24 +204,30 @@ const toggleMobileMenu = () => {
       >
         <div class="p-6 space-y-4">
           <!-- Auth Mobile Section -->
-          <div v-if="authStore.isAuthenticated && authStore.user" class="pb-4 mb-4 border-b border-stone-200 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold">
-                {{ authStore.user.displayName.charAt(0) }}
-              </div>
-              <div>
-                <div class="text-stone-800 font-bold">{{ authStore.user.displayName }}</div>
-                <div class="text-stone-500 text-xs">ผู้ใช้งาน</div>
+          <div v-if="authStore.isAuthenticated && authStore.user" class="pb-4 mb-4 border-b border-stone-200">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold">
+                  {{ authStore.user.displayName.charAt(0) }}
+                </div>
+                <div>
+                  <div class="text-stone-800 font-bold">{{ authStore.user.displayName }}</div>
+                  <div class="text-stone-500 text-xs">ผู้ใช้งาน</div>
+                </div>
               </div>
             </div>
-            <button @click="() => { mobileMenuOpen = false; handleLogoutClick(); }" class="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-full font-medium">ออกจากระบบ</button>
+            <div class="flex gap-2">
+              <button @click="openProfileModal" class="flex-1 text-center px-4 py-2 text-sm bg-stone-100 text-stone-700 rounded-full font-medium hover:bg-stone-200">จัดการโปรไฟล์</button>
+              <button @click="() => { mobileMenuOpen = false; handleLogoutClick(); }" class="flex-1 px-4 py-2 text-sm bg-red-50 text-red-600 rounded-full font-medium hover:bg-red-100">ออกจากระบบ</button>
+            </div>
           </div>
           
           <RouterLink 
             v-for="item in menuItems" 
             :key="item.name"
             :to="item.path"
-            class="block text-lg font-bold text-stone-700 hover:text-amber-600 transition-colors"
+            class="block text-lg font-bold transition-colors"
+            :class="route.path === item.path ? 'text-amber-600' : 'text-stone-700 hover:text-amber-600'"
             @click="mobileMenuOpen = false"
           >
             {{ item.name }}
@@ -310,6 +327,9 @@ const toggleMobileMenu = () => {
         </div>
       </div>
     </div>
+
+    <!-- Profile Modal -->
+    <ProfileModal v-if="showProfileModal" @close="showProfileModal = false" />
   </header>
 </template>
 
