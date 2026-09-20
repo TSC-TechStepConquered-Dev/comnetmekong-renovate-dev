@@ -28,6 +28,16 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
     {
+      path: ROUTES.MEKONG_YOUTH,
+      name: 'mekong_youth',
+      component: () => import('../views/MekongYouthView.vue'),
+    },
+    {
+      path: ROUTES.OUR_WORK,
+      name: 'our_work',
+      component: () => import('../views/OurWorkView.vue'),
+    },
+    {
       path: ROUTES.AUTH.LOGIN,
       name: 'login',
       component: () => import('../views/auth/LoginView.vue'),

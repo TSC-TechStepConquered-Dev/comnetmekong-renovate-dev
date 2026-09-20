@@ -3,6 +3,8 @@ export const ROUTES = Object.freeze({
   BLOGS: '/blogs',
   BLOG_DETAIL: (id) => `/blogs/${id}`,
   ABOUT: '/about',
+  MEKONG_YOUTH: '/mekong-youth',
+  OUR_WORK: '/our-work',
   MISSIONS: '/missions',
   GALLERY: '/gallery',
   CONTACT: '/contact',

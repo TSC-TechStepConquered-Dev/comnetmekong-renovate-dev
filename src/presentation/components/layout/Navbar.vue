@@ -11,8 +11,8 @@ const route = useRoute()
 const menuItems = [
   { name: 'หน้าแรก', path: ROUTES.HOME },
   { name: 'เกี่ยวกับเรา', path: ROUTES.ABOUT },
-  { name: 'งานของเรา', path: '#' },
-  { name: 'Hug Mekong Youth', path: '#' },
+  { name: 'งานของเรา', path: ROUTES.OUR_WORK },
+  { name: 'Hug Mekong Youth', path: ROUTES.MEKONG_YOUTH },
   { name: 'มัลติมีเดีย', path: '#' },
   { name: 'คนฮักโขง', path: '#' },
   { name: 'การบริจาค', path: '#' }
