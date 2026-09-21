@@ -1,9 +1,20 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useHead } from '@unhead/vue'
 import { WixBlogRepository } from '../infrastructure/repositories/wix-blog.repository'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 import { useBlogStore } from '../presentation/stores/blog'
+
+useHead({
+  title: 'หน้าแรก | COMNETMEKONG',
+  meta: [
+    {
+      name: 'description',
+      content: 'เครือข่ายเยาวชนลุ่มน้ำโขง บันทึกเรื่องราวของผู้คน ชุมชน วัฒนธรรม และภูมิปัญญาที่ดำรงอยู่คู่สายน้ำ'
+    }
+  ]
+})
 
 const blogStore = useBlogStore()
 const blogRepo = new WixBlogRepository()

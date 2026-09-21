@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 
@@ -141,6 +141,14 @@ const fetchData = async () => {
 
 const selectedWork = ref(null)
 
+watch(selectedWork, (newVal) => {
+  if (newVal) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = 'auto'
+  }
+})
+
 onMounted(() => {
   isTypingActive = true
   typeText()
@@ -261,51 +269,53 @@ onUnmounted(() => {
     </section>
 
     <!-- Read More Modal -->
-    <div 
-      v-if="selectedWork" 
-      class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
-    >
-      <!-- Backdrop -->
-      <div class="absolute inset-0 bg-stone-900/60 backdrop-blur-sm" @click="selectedWork = null"></div>
-      
-      <!-- Modal Content -->
-      <div class="relative bg-white rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col" data-aos="zoom-in" data-aos-duration="300">
-        <!-- Close Button -->
-        <button 
-          @click="selectedWork = null" 
-          class="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
+    <transition name="modal">
+      <div 
+        v-if="selectedWork" 
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
+      >
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-stone-900/60 backdrop-blur-sm" @click="selectedWork = null"></div>
+        
+        <!-- Modal Content -->
+        <div class="modal-content relative bg-white rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
+          <!-- Close Button -->
+          <button 
+            @click="selectedWork = null" 
+            class="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
 
-        <!-- Image -->
-        <div class="w-full aspect-video sm:aspect-[21/9] bg-stone-200 shrink-0">
-          <img 
-            v-if="selectedWork.image" 
-            :src="selectedWork.image" 
-            class="w-full h-full object-cover" 
-            :alt="selectedWork.title" 
-          />
-        </div>
-
-        <!-- Text Content -->
-        <div class="p-6 md:p-10 flex flex-col">
-          <div class="mb-6">
-            <span v-if="selectedWork.agency" class="inline-block px-4 py-2 bg-[#f0f8f1] text-[#2d6a4f] text-xs md:text-sm font-bold rounded-full tracking-wide">
-              {{ selectedWork.agency }}
-            </span>
+          <!-- Image -->
+          <div class="w-full aspect-video sm:aspect-[21/9] bg-stone-200 shrink-0">
+            <img 
+              v-if="selectedWork.image" 
+              :src="selectedWork.image" 
+              class="w-full h-full object-cover" 
+              :alt="selectedWork.title" 
+            />
           </div>
-          
-          <h2 class="text-2xl md:text-4xl font-bold text-stone-900 mb-6 leading-snug">
-            "{{ selectedWork.title }}"
-          </h2>
-          
-          <div class="text-stone-700 leading-relaxed text-base md:text-lg whitespace-pre-line text-justify md:text-left">
-            {{ selectedWork.description }}
+
+          <!-- Text Content -->
+          <div class="p-6 md:p-10 flex flex-col">
+            <div class="mb-6">
+              <span v-if="selectedWork.agency" class="inline-block px-4 py-2 bg-[#f0f8f1] text-[#2d6a4f] text-xs md:text-sm font-bold rounded-full tracking-wide">
+                {{ selectedWork.agency }}
+              </span>
+            </div>
+            
+            <h2 class="text-2xl md:text-4xl font-bold text-stone-900 mb-6 leading-snug">
+              "{{ selectedWork.title }}"
+            </h2>
+            
+            <div class="text-stone-700 leading-relaxed text-base md:text-lg whitespace-pre-line text-justify md:text-left">
+              {{ selectedWork.description }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </transition>
 
     <!-- Footer -->
     <Footer />
@@ -335,5 +345,24 @@ onUnmounted(() => {
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+}
+
+/* Modal Transitions */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+.modal-enter-active .modal-content,
+.modal-leave-active .modal-content {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-enter-from .modal-content,
+.modal-leave-to .modal-content {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
 }
 </style>
