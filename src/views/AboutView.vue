@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, onUnmounted } from 'vue'
-import { useHead } from '@unhead/vue'
+import { useHead } from '@vueuse/head'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 
@@ -433,3 +433,4 @@ onUnmounted(() => {
   font-weight: 300;
 }
 </style>
+

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useHead } from '@unhead/vue'
+import { useHead } from '@vueuse/head'
 import { useBlogStore } from '../presentation/stores/blog'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
@@ -171,3 +171,4 @@ onMounted(async () => {
     <Footer />
   </main>
 </template>
+

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { useHead } from '@unhead/vue'
+import { useHead } from '@vueuse/head'
 import { useRoute, useRouter } from 'vue-router'
 import { WixBlogRepository } from '../infrastructure/repositories/wix-blog.repository'
 import { useAuthStore } from '../presentation/stores/auth'
@@ -721,3 +721,4 @@ const handleShare = async () => {
   animation: heartbeat 1.2s infinite;
 }
 </style>
+

@@ -46,16 +46,11 @@ const handleLogoutClick = () => {
 
 const confirmLogout = () => {
   showLogoutModal.value = false
-  window.parent.postMessage({ type: 'REQUEST_WIX_LOGOUT' }, '*')
   authStore.logout()
 }
 
 const cancelLogout = () => {
   showLogoutModal.value = false
-}
-
-const requestWixLogin = () => {
-  window.parent.postMessage({ type: 'REQUEST_WIX_LOGIN' }, '*')
 }
 
 const mobileMenuOpen = ref(false)

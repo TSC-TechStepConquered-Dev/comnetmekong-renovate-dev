@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useHead } from '@unhead/vue'
+import { useHead } from '@vueuse/head'
 import { WixBlogRepository } from '../infrastructure/repositories/wix-blog.repository'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
@@ -416,3 +416,4 @@ const fetchDonors = async () => {
   animation: slowFadeIn 1s ease-out 4s forwards;
 }
 </style>
+

@@ -3,17 +3,15 @@ import 'aos/dist/aos.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import vue3GoogleLogin from 'vue3-google-login'
-import { createUnhead } from 'unhead'
-import { headSymbol } from '@unhead/vue'
+import { createHead } from '@vueuse/head'
 
 import App from './App.vue'
 import router from './router'
 
-const unhead = createUnhead()
-
+const head = createHead()
 const app = createApp(App)
 
-app.provide(headSymbol, unhead)
+app.use(head)
 app.use(createPinia())
 app.use(router)
 app.use(vue3GoogleLogin, {

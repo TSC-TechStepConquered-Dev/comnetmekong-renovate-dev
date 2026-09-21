@@ -6,21 +6,6 @@ import Lenis from 'lenis'
 
 let lenis = null
 let animationFrameId = null
-let resizeObserver = null
-
-const sendHeightToWix = () => {
-  const height = document.documentElement.scrollHeight || document.body.scrollHeight;
-  // ส่งข้อความหาหน้าต่างแม่ (Wix)
-  window.parent.postMessage({ type: 'RESIZE_IFRAME', height: height }, '*');
-};
-
-const receiveMessageFromWix = (event) => {
-  // รับค่าความสูงหน้าต่างจริงจาก Wix
-  if (event.data && event.data.type === 'WINDOW_HEIGHT') {
-    const realHeight = event.data.height;
-    document.documentElement.style.setProperty('--hero-height', `${realHeight}px`);
-  }
-};
 
 onMounted(() => {
   // Initialize Smooth Scrolling (Lenis)
@@ -46,27 +31,11 @@ onMounted(() => {
     once: true,
     offset: 50
   })
-
-  // ส่งความสูงให้ Wix ครั้งแรกเมื่อโหลดเสร็จ
-  sendHeightToWix();
-
-  // ติดตามการเปลี่ยนแปลงขนาดเนื้อหา
-  resizeObserver = new ResizeObserver(() => {
-    sendHeightToWix();
-  });
-  resizeObserver.observe(document.body);
-
-  // ดัก event ตอน window ย่อ-ขยาย และดักรับข้อความจาก Wix
-  window.addEventListener('resize', sendHeightToWix);
-  window.addEventListener('message', receiveMessageFromWix);
 })
 
 onUnmounted(() => {
   if (lenis) lenis.destroy()
   if (animationFrameId) cancelAnimationFrame(animationFrameId)
-  if (resizeObserver) resizeObserver.disconnect()
-  window.removeEventListener('resize', sendHeightToWix)
-  window.removeEventListener('message', receiveMessageFromWix)
 })
 </script>
 
