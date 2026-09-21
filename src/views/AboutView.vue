@@ -189,7 +189,8 @@ const formatDescription = (text) => {
 
 const fetchOurWork = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/our_work`).catch(() => null)
+    // เปลี่ยนจาก /our_work เป็น /about_works (Endpoint ใหม่สำหรับหน้า About)
+    const response = await fetch(`${BASE_URL}/about_works`).catch(() => null)
     if (!response || !response.ok) {
       ourWorks.value = MOCK_OUR_WORKS
       return
