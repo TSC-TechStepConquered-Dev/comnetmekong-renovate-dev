@@ -7,12 +7,9 @@ import Footer from '../presentation/components/layout/Footer.vue'
 import { useBlogStore } from '../presentation/stores/blog'
 
 useHead({
-  title: 'หน้าแรก | COMNETMEKONG',
+  title: 'COMNETMEKONG - หน้าแรก',
   meta: [
-    {
-      name: 'description',
-      content: 'เครือข่ายเยาวชนลุ่มน้ำโขง บันทึกเรื่องราวของผู้คน ชุมชน วัฒนธรรม และภูมิปัญญาที่ดำรงอยู่คู่สายน้ำ'
-    }
+    { name: 'description', content: 'เครือข่าย COMNETMEKONG พื้นที่เชื่อมโยงชุมชนและเยาวชนเพื่อการอนุรักษ์แม่น้ำโขง' },
   ]
 })
 
@@ -153,6 +150,7 @@ const fetchDonors = async () => {
           loop
           muted
           playsinline
+          preload="none"
         ></video>
         <!-- Dark overlay to make text readable, mimicking the mockup -->
         <div class="absolute inset-0 bg-stone-900/40 mix-blend-multiply"></div>
@@ -306,6 +304,7 @@ const fetchDonors = async () => {
           <button 
             @click="prevPage" 
             :disabled="currentPage === 1"
+            aria-label="หน้าก่อนหน้า"
             class="w-10 h-10 rounded-full flex items-center justify-center border border-stone-300 text-stone-600 hover:bg-stone-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
@@ -326,6 +325,7 @@ const fetchDonors = async () => {
           <button 
             @click="nextPage" 
             :disabled="currentPage === totalPages"
+            aria-label="หน้าถัดไป"
             class="w-10 h-10 rounded-full flex items-center justify-center border border-stone-300 text-stone-600 hover:bg-stone-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -373,7 +373,9 @@ const fetchDonors = async () => {
               v-if="donor.logoUrl" 
               :src="donor.logoUrl" 
               :alt="donor.name" 
-              class="max-w-full max-h-full object-contain transition-transform duration-300" 
+              class="max-w-full max-h-full object-contain transition-transform duration-300"
+              loading="lazy"
+              decoding="async"
             />
             <span v-else>{{ donor.name }}</span>
           </a>

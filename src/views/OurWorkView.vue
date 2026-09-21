@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useHead } from '@unhead/vue'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 
@@ -7,6 +8,13 @@ import Footer from '../presentation/components/layout/Footer.vue'
 const fullText = 'OUR WORKS.'
 const displayedText = ref([])
 let isTypingActive = false
+
+useHead({
+  title: 'งานของเรา - COMNETMEKONG',
+  meta: [
+    { name: 'description', content: 'ผลงานและกิจกรรมของเครือข่าย COMNETMEKONG ที่เชื่อมชุมชน รักษาแม่น้ำโขง' },
+  ]
+})
 
 const typeText = async () => {
   if (!isTypingActive) return
@@ -175,6 +183,8 @@ onUnmounted(() => {
           src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2000&auto=format&fit=crop" 
           class="w-full h-full object-cover object-center"
           alt="Our Work Background"
+          loading="eager"
+          decoding="async"
         />
         <!-- Dark overlay to make text readable -->
         <div class="absolute inset-0 bg-stone-900/50 mix-blend-multiply"></div>
@@ -237,6 +247,8 @@ onUnmounted(() => {
                 :src="item.image" 
                 :alt="item.title"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
               />
               <!-- Fallback -->
               <div v-else class="w-full h-full flex items-center justify-center text-stone-400">No Image</div>
@@ -282,6 +294,7 @@ onUnmounted(() => {
           <!-- Close Button -->
           <button 
             @click="selectedWork = null" 
+            aria-label="ปิด"
             class="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>

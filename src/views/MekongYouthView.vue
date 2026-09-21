@@ -1,11 +1,19 @@
 <script setup>
 import { onMounted, ref, onUnmounted } from 'vue'
+import { useHead } from '@unhead/vue'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 
 const textToType = "HUG MEKONG YOUTH"
 const displayedText = ref("")
 let isTypingActive = true
+
+useHead({
+  title: 'Mekong Youth - COMNETMEKONG',
+  meta: [
+    { name: 'description', content: 'กิจกรรมเยาวชนเพื่อการอนุรักษ์ลุ่มน้ำโขง (Mekong Youth)' },
+  ]
+})
 
 const typeText = async () => {
   while (isTypingActive) {
@@ -170,6 +178,8 @@ onUnmounted(() => {
           src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2000&auto=format&fit=crop" 
           class="w-full h-full object-cover object-center"
           alt="Mekong Youth"
+          loading="eager"
+          decoding="async"
         />
         <div class="absolute inset-0 bg-stone-900/50 mix-blend-multiply"></div>
       </div>
@@ -252,6 +262,8 @@ onUnmounted(() => {
                     :src="imgSrc" 
                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     :alt="`Gallery image ${imgIndex + 1}`"
+                    loading="lazy"
+                    decoding="async"
                   >
                 </div>
               </div>
@@ -288,6 +300,8 @@ onUnmounted(() => {
                   frameborder="0" 
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                   allowfullscreen
+                  loading="lazy"
+                  title="วิดีโอกิจกรรม"
                 ></iframe>
               </div>
               <h3 class="text-lg font-bold text-stone-900 mt-4 px-2">{{ item.title }}</h3>

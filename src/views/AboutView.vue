@@ -1,27 +1,47 @@
 <script setup>
 import { onMounted, ref, onUnmounted } from 'vue'
+import { useHead } from '@unhead/vue'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 
-const textToType = "WHAT WE DO?"
-const displayedText = ref("")
-let isTypingActive = true
+const fullText = 'ABOUT US.'
+const displayedText = ref([])
+let isTypingActive = false
+
+useHead({
+  title: 'เกี่ยวกับเรา - COMNETMEKONG',
+  meta: [
+    { name: 'description', content: 'เรียนรู้เกี่ยวกับความเป็นมาและพันธกิจของเครือข่าย COMNETMEKONG' },
+  ]
+})
 
 const typeText = async () => {
-  while (isTypingActive) {
-    displayedText.value = ""
-    
-    // Type each character
-    for (let i = 0; i < textToType.length; i++) {
-      if (!isTypingActive) break
-      displayedText.value += textToType[i]
-      await new Promise(r => setTimeout(r, 150)) // typing speed
-    }
-    
-    if (!isTypingActive) break
-    
-    // Hold for 12 seconds
-    await new Promise(r => setTimeout(r, 12000))
+  if (!isTypingActive) return
+  
+  displayedText.value = []
+  
+  // Type text
+  for (let i = 0; i < fullText.length; i++) {
+    if (!isTypingActive) return
+    displayedText.value.push(fullText[i])
+    await new Promise(resolve => setTimeout(resolve, 150))
+  }
+
+  // Wait
+  await new Promise(resolve => setTimeout(resolve, 3000))
+  
+  // Untype text
+  for (let i = fullText.length; i > 0; i--) {
+    if (!isTypingActive) return
+    displayedText.value.pop()
+    await new Promise(resolve => setTimeout(resolve, 50))
+  }
+
+  // Wait before restarting
+  await new Promise(resolve => setTimeout(resolve, 500))
+  
+  if (isTypingActive) {
+    typeText()
   }
 }
 
@@ -230,6 +250,8 @@ onUnmounted(() => {
           src="../assets/about_bg.jpg" 
           class="w-full h-full object-cover object-center"
           alt="Mekong River"
+          loading="eager"
+          decoding="async"
         />
         <!-- Dark overlay to make text and navbar readable -->
         <div class="absolute inset-0 bg-stone-900/40 mix-blend-multiply"></div>
@@ -334,15 +356,15 @@ onUnmounted(() => {
               <!-- Case: 2 Images -->
               <div v-if="item.image1 && item.image2" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-stone-200">
-                  <img :src="item.image1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" :alt="`${item.title} image 1`">
+                  <img :src="item.image1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" :alt="`${item.title} image 1`" loading="lazy" decoding="async">
                 </div>
                 <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-stone-200">
-                  <img :src="item.image2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" :alt="`${item.title} image 2`">
+                  <img :src="item.image2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" :alt="`${item.title} image 2`" loading="lazy" decoding="async">
                 </div>
               </div>
               <!-- Case: 1 Image -->
               <div v-else-if="item.image1 || item.image2" class="aspect-video md:aspect-[21/9] rounded-2xl overflow-hidden bg-stone-200">
-                <img :src="item.image1 || item.image2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" :alt="item.title">
+                <img :src="item.image1 || item.image2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" :alt="item.title" loading="lazy" decoding="async">
               </div>
             </div>
           </div>
@@ -382,7 +404,7 @@ onUnmounted(() => {
             :data-aos-delay="100 + (index * 100)"
           >
             <div class="w-28 h-28 rounded-full overflow-hidden mb-6 border-4 border-[#f4f1ea] shadow-sm">
-              <img :src="staff.image" class="w-full h-full object-cover" :alt="staff.name">
+              <img :src="staff.image" class="w-full h-full object-cover" :alt="staff.name" loading="lazy" decoding="async">
             </div>
             <h3 class="text-lg font-bold text-stone-900 mb-1">{{ staff.name }}</h3>
             <p class="text-stone-500 text-xs font-medium mb-6">{{ staff.role }}</p>

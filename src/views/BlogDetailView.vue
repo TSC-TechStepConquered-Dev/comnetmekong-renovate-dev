@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { useHead } from '@unhead/vue'
 import { useRoute, useRouter } from 'vue-router'
 import { WixBlogRepository } from '../infrastructure/repositories/wix-blog.repository'
 import { useAuthStore } from '../presentation/stores/auth'
@@ -16,6 +17,20 @@ const blogStore = useBlogStore()
 const blog = ref(null)
 const loading = ref(true)
 const error = ref('')
+
+useHead({
+  title: computed(() => blog.value ? `${blog.value.title} - COMNETMEKONG` : 'บทความ - COMNETMEKONG'),
+  meta: [
+    { 
+      name: 'description', 
+      content: computed(() => {
+        if (blog.value && blog.value.excerpt) return blog.value.excerpt;
+        if (blog.value && blog.value.content) return blog.value.content.replace(/<[^>]+>/g, '').substring(0, 160) + '...';
+        return 'บทความจากเครือข่าย COMNETMEKONG'
+      }) 
+    },
+  ]
+})
 
 const isLiked = ref(false)
 const likeCount = ref(0)

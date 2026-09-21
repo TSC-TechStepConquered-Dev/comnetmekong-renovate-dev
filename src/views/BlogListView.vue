@@ -1,10 +1,19 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useHead } from '@unhead/vue'
 import { useBlogStore } from '../presentation/stores/blog'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 
 const blogStore = useBlogStore()
+
+useHead({
+  title: 'บทความและข่าวสาร - COMNETMEKONG',
+  meta: [
+    { name: 'description', content: 'อ่านบทความ ข่าวสาร และเรื่องราวความเคลื่อนไหวจากเครือข่าย COMNETMEKONG' },
+  ]
+})
+
 const blogs = ref([])
 const loading = ref(true)
 
