@@ -4,7 +4,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import vue3GoogleLogin from 'vue3-google-login'
 import { createUnhead } from 'unhead'
-import { VueHeadMixin } from '@unhead/vue'
+import { headSymbol } from '@unhead/vue'
 
 import App from './App.vue'
 import router from './router'
@@ -13,7 +13,7 @@ const unhead = createUnhead()
 
 const app = createApp(App)
 
-app.mixin(VueHeadMixin)
+app.provide(headSymbol, unhead)
 app.use(createPinia())
 app.use(router)
 app.use(vue3GoogleLogin, {
