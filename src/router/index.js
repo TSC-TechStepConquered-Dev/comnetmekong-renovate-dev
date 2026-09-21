@@ -38,6 +38,11 @@ const router = createRouter({
       component: () => import('../views/OurWorkView.vue'),
     },
     {
+      path: ROUTES.MULTIMEDIA,
+      name: 'multimedia',
+      component: () => import('../views/MultimediaView.vue'),
+    },
+    {
       path: ROUTES.AUTH.LOGIN,
       name: 'login',
       component: () => import('../views/auth/LoginView.vue'),

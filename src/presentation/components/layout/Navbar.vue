@@ -13,7 +13,7 @@ const menuItems = [
   { name: 'เกี่ยวกับเรา', path: ROUTES.ABOUT },
   { name: 'งานของเรา', path: ROUTES.OUR_WORK },
   { name: 'Hug Mekong Youth', path: ROUTES.MEKONG_YOUTH },
-  { name: 'มัลติมีเดีย', path: '#' },
+  { name: 'มัลติมีเดีย', path: ROUTES.MULTIMEDIA },
   { name: 'คนฮักโขง', path: '#' },
   { name: 'การบริจาค', path: '#' }
 ]

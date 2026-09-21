@@ -55,94 +55,9 @@ const ourWorkData = ref([])
 const loadingData = ref(true)
 const BASE_URL = import.meta.env.VITE_WIX_BASE_URL || 'https://www.comnetmekong.org/_functions'
 
-// MOCK DATA for Research
-const MOCK_RESEARCH_DATA = [
-  {
-    id: 1,
-    title: 'รายงานการวิจัยความหลากหลายทางชีวภาพลุ่มน้ำโขง',
-    agency: 'สถาบันวิจัยทรัพยากรน้ำ',
-    description: 'การศึกษาและสำรวจพันธุ์ปลาพื้นเมืองที่เสี่ยงต่อการสูญพันธุ์...',
-    image:
-      'https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=800&auto=format&fit=crop',
-    pdfFile:
-      'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf',
-  },
-  {
-    id: 2,
-    title: 'ผลกระทบของการเปลี่ยนแปลงสภาพภูมิอากาศต่อวิถีชีวิตริมโขง',
-    agency: 'มหาวิทยาลัยแม่โขง',
-    description: 'งานวิจัยระยะยาวเพื่อประเมินความเสี่ยงและแนวทางปรับตัวของชุมชน',
-    image:
-      'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop',
-    pdfFile:
-      'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf',
-  },
-]
-
 const researchData = ref([])
 const loadingResearch = ref(true)
 const selectedResearch = ref(null)
-
-// MOCK DATA for Our Work
-const MOCK_OUR_WORK_DATA = [
-  {
-    id: 1,
-    title: 'โครงการพัฒนาศักยภาพเยาวชนคนรุ่นใหม่ใส่ใจสื่อสร้างสรรค์',
-    agency: 'สำนักงานกองทุนสนับสนุนการสร้างเสริมสุขภาพ (สสส.) (2566-2569)',
-    description:
-      'โครงการพัฒนาศักยภาพเยาวชนคนรุ่นใหม่ใส่ใจสื่อสร้างสรรค์ - เสริมทักษะเยาวชน 7 จังหวัดริมโขง ผ่านการอบรมและการผลิตสื่อสร้างสรรค์หลากหลายรูปแบบ...',
-    image:
-      'https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    id: 2,
-    title: 'โครงการพัฒนาศักยภาพเยาวชนฮักแม่น้ำโขง',
-    agency: 'Global Fund for Children (2567-ปัจจุบัน)',
-    description:
-      'เรียนรู้ระบบนิเวศ สำรวจลำน้ำ ปลูกพืช อนุรักษ์สัตว์น้ำ และสร้างสื่อเพื่อการเปลี่ยนแปลง พร้อมเปิดพื้นที่ความรู้ใหม่ให้กับเด็กลุ่มแม่น้ำโขง...',
-    image:
-      'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    id: 3,
-    title:
-      'โครงการสื่อสารเชิงนโยบายเพื่อส่งเสริมการอนุรักษ์อย่างมีส่วนร่วมของชุมชนในพื้นที่เชื่อมต่อแม่น้ำโขงและปากชม',
-    agency: 'CEPF - กองทุนเพื่อการอนุรักษ์ความหลากหลายทางชีวภาพ (2566-2567)',
-    description:
-      'สำรวจความหลากหลายทางชีวภาพและระบบนิเวศย่อย โดยนักวิชาการและชุมชนร่วมกันเรียนรู้และวางแผนส่งเสริมแนวทางพัฒนาที่อิงธรรมชาติ ใน 13 ชุมชน...',
-    image:
-      'https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    id: 4,
-    title: 'โครงการสร้างความร่วมมือสองฝั่งโขงเพื่อการอนุรักษ์ปลาอีสกไทย',
-    agency: 'SHOAL - องค์กรอนุรักษ์พันธุ์สัตว์น้ำจืด (2566-2567)',
-    description:
-      'ร่วมมือไทย-ลาวในการแลกเปลี่ยนข้อมูลการลดลงของปลาอีสกไทย จัดตั้งเขตอนุรักษ์ร่วม และส่งเสริมการมีส่วนร่วมของชุมชนในการอนุรักษ์...',
-    image:
-      'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    id: 5,
-    title:
-      'โครงการส่งเสริมการท่องเที่ยวชุมชนอุทยานธรณีผาชันสามพันโบกภายใต้หลักการพัฒนาอย่างยั่งยืน',
-    agency: 'EU-UNDP โครงการพัฒนาแห่งสหประชาชาติ (2566-2567)',
-    description:
-      'โครงการส่งเสริมการท่องเที่ยวชุมชนอุทยานธรณีผาชันสามพันโบกภายใต้หลักการพัฒนาอย่างยั่งยืน...',
-    image:
-      'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=800&auto=format&fit=crop',
-  },
-  {
-    id: 6,
-    title:
-      'โครงการพัฒนาศักยภาพเครือข่ายภาคประชาสังคมเพื่อสร้างการมีส่วนร่วมในการกำหนดอนาคตแม่น้ำโขง',
-    agency: 'USAID-WWF องค์การกองทุนสัตว์ป่าโลกสากล (2566-2567)',
-    description:
-      'สร้างการมีส่วนร่วมเพื่อปกป้องแม่น้ำโขง เชื่อมเครือข่ายองค์กรชุมชนและภาคประชาสังคมทุกระดับ...',
-    image:
-      'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop',
-  },
-]
 
 // Helper: Convert wix:image:// URL to standard https URL
 const convertWixImageUrl = (wixUrl) => {
@@ -185,7 +100,7 @@ const fetchData = async () => {
   try {
     const response = await fetch(`${BASE_URL}/our_work`).catch(() => null)
     if (!response || !response.ok) {
-      ourWorkData.value = MOCK_OUR_WORK_DATA
+      ourWorkData.value = []
       return
     }
     const result = await response.json()
@@ -200,11 +115,11 @@ const fetchData = async () => {
         image: convertWixImageUrl(item.image || item.cover || ''),
       }))
     } else {
-      ourWorkData.value = MOCK_OUR_WORK_DATA
+      ourWorkData.value = []
     }
   } catch (error) {
     console.warn('Error fetching our work data, using mock', error)
-    ourWorkData.value = MOCK_OUR_WORK_DATA
+    ourWorkData.value = []
   } finally {
     loadingData.value = false
   }
@@ -214,7 +129,7 @@ const fetchResearchData = async () => {
   try {
     const response = await fetch(`${BASE_URL}/research`).catch(() => null)
     if (!response || !response.ok) {
-      researchData.value = MOCK_RESEARCH_DATA
+      researchData.value = []
       return
     }
     const result = await response.json()
@@ -230,11 +145,11 @@ const fetchResearchData = async () => {
         pdfFile: convertWixFileUrl(item.pdfFile || ''),
       }))
     } else {
-      researchData.value = MOCK_RESEARCH_DATA
+      researchData.value = []
     }
   } catch (error) {
     console.warn('Error fetching research data, using mock', error)
-    researchData.value = MOCK_RESEARCH_DATA
+    researchData.value = []
   } finally {
     loadingResearch.value = false
   }
@@ -242,8 +157,8 @@ const fetchResearchData = async () => {
 
 const selectedWork = ref(null)
 
-watch(selectedWork, (newVal) => {
-  if (newVal) {
+watch([selectedWork, selectedResearch], ([newWork, newResearch]) => {
+  if (newWork || newResearch) {
     document.body.style.overflow = 'hidden'
   } else {
     document.body.style.overflow = 'auto'

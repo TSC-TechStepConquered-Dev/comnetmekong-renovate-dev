@@ -7,6 +7,7 @@ export const ROUTES = Object.freeze({
   OUR_WORK: '/our-work',
   MISSIONS: '/missions',
   GALLERY: '/gallery',
+  MULTIMEDIA: '/multimedia',
   CONTACT: '/contact',
   AUTH: {
     LOGIN: '/login',
