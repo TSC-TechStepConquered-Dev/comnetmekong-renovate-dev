@@ -9,6 +9,7 @@ export const ROUTES = Object.freeze({
   GALLERY: '/gallery',
   MULTIMEDIA: '/multimedia',
   CONTACT: '/contact',
+  DONATE: '/donate',
   AUTH: {
     LOGIN: '/login',
     REGISTER: '/register',

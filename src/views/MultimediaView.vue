@@ -305,7 +305,7 @@ onUnmounted(() => {
 
       <!-- Hero Content -->
       <div
-        class="relative z-10 max-w-5xl mx-auto px-4 md:px-8 w-full mt-14 text-center flex flex-col justify-center items-center h-full"
+        class="relative z-10 max-w-7xl mx-auto px-4 md:px-8 w-full mt-8 text-center flex flex-col justify-center items-center h-full"
       >
         <!-- Title with Typing Animation -->
         <h1

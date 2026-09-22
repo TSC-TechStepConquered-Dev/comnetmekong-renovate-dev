@@ -61,6 +61,11 @@ const router = createRouter({
       path: '/blogs/:id',
       name: 'blog_detail',
       component: () => import('../views/BlogDetailView.vue'),
+    },
+    {
+      path: ROUTES.DONATE,
+      name: 'donate',
+      component: () => import('../views/DonateView.vue'),
     }
   ],
 })

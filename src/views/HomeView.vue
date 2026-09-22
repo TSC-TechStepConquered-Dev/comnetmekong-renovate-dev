@@ -93,18 +93,13 @@ const donors = ref([])
 const loadingDonors = ref(true)
 const BASE_URL = import.meta.env.VITE_WIX_BASE_URL || 'https://www.comnetmekong.org/_functions'
 
-const MOCK_DONORS = Array.from({ length: 13 }).map((_, i) => ({
-  id: `mock_donor_${i+1}`,
-  name: `Donor ${i+1}`,
-  logoUrl: '', // Using empty string to show placeholder style
-  link: '#'
-}))
+
 
 const fetchDonors = async () => {
   try {
     const response = await fetch(`${BASE_URL}/donors`).catch(() => null)
     if (!response || !response.ok) {
-      donors.value = MOCK_DONORS
+      donors.value = []
       return
     }
     const result = await response.json()
@@ -121,11 +116,11 @@ const fetchDonors = async () => {
         link: item.link || item.url || '#'
       }))
     } else {
-      donors.value = MOCK_DONORS
+      donors.value = []
     }
   } catch (error) {
-    console.warn('Error fetching donors, using mock', error)
-    donors.value = MOCK_DONORS
+    console.warn('Error fetching donors', error)
+    donors.value = []
   } finally {
     loadingDonors.value = false
   }

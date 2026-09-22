@@ -4,32 +4,32 @@ import { useHead } from '@vueuse/head'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 
-const textToType = "HUG MEKONG YOUTH"
-const displayedText = ref("")
+const textToType = 'HUG MEKONG YOUTH'
+const displayedText = ref('')
 let isTypingActive = true
 
 useHead({
   title: 'Mekong Youth - COMNETMEKONG',
   meta: [
     { name: 'description', content: 'กิจกรรมเยาวชนเพื่อการอนุรักษ์ลุ่มน้ำโขง (Mekong Youth)' },
-  ]
+  ],
 })
 
 const typeText = async () => {
   while (isTypingActive) {
-    displayedText.value = ""
-    
+    displayedText.value = ''
+
     // Type each character
     for (let i = 0; i < textToType.length; i++) {
       if (!isTypingActive) break
       displayedText.value += textToType[i]
-      await new Promise(r => setTimeout(r, 150)) // typing speed
+      await new Promise((r) => setTimeout(r, 150)) // typing speed
     }
-    
+
     if (!isTypingActive) break
-    
+
     // Hold for 12 seconds
-    await new Promise(r => setTimeout(r, 12000))
+    await new Promise((r) => setTimeout(r, 12000))
   }
 }
 
@@ -38,32 +38,7 @@ const youthData = ref([])
 const loadingData = ref(true)
 const BASE_URL = import.meta.env.VITE_WIX_BASE_URL || 'https://www.comnetmekong.org/_functions'
 
-// MOCK DATA: มี field "gallery" เป็น array ของรูปภาพ
-const MOCK_YOUTH_DATA = [
-  {
-    id: 1,
-    title: 'กิจกรรมค่ายเยาวชนอนุรักษ์ลุ่มน้ำโขง 2567',
-    date: '20-22 สิงหาคม 2567',
-    description: `เครือข่ายลุ่มน้ำโขงได้จัดกิจกรรมเพื่อส่งเสริมความรู้ความเข้าใจให้กับเยาวชนคนรุ่นใหม่เกี่ยวกับความสำคัญของระบบนิเวศและวัฒนธรรมท้องถิ่น\n\nผู้เข้าร่วมกิจกรรมได้มีโอกาสลงพื้นที่จริง เรียนรู้วิถีชีวิตของชาวประมงพื้นบ้าน และศึกษาสายพันธุ์ปลาที่ได้รับผลกระทบจากการเปลี่ยนแปลงของระดับน้ำ`,
-    videoUrl: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
-    gallery: [
-      'https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=800&auto=format&fit=crop'
-    ]
-  },
-  {
-    id: 2,
-    title: 'โครงการผู้นำเยาวชนพิทักษ์สายน้ำ',
-    date: '5 กันยายน 2567',
-    description: `พัฒนาศักยภาพเยาวชนในพื้นที่ให้เป็นกระบอกเสียงและเป็นผู้นำในการรณรงค์แก้ไขปัญหาสิ่งแวดล้อมระดับชุมชน โดยมีการอบรมเชิงปฏิบัติการด้านการสื่อสารและการทำวิจัยจิ๋ว (Mini-research)`,
-    videoUrl: '',
-    gallery: [
-      'https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop'
-    ]
-  }
-]
+
 
 // Helper: Convert wix:image:// URL to standard https URL
 const convertWixImageUrl = (wixUrl) => {
@@ -85,7 +60,11 @@ const formatDescription = (text) => {
   if (text.includes('<p') || text.includes('<div') || text.includes('<br')) {
     return text
   }
-  return text.split('\n').filter(p => p.trim()).map(p => `<p class="mb-4">${p}</p>`).join('')
+  return text
+    .split('\n')
+    .filter((p) => p.trim())
+    .map((p) => `<p class="mb-4">${p}</p>`)
+    .join('')
 }
 
 // Helper: Convert Video URL to Embed URL
@@ -107,6 +86,7 @@ const getEmbedUrl = (url) => {
       return videoId ? `https://player.vimeo.com/video/${videoId}` : ''
     }
     return url // fallback
+    // eslint-disable-next-line no-unused-vars
   } catch (e) {
     return url
   }
@@ -117,20 +97,21 @@ const fetchData = async () => {
     // 💡 เตรียม Endpoint '/mekong_youth' ไว้ดึงข้อมูลจาก Wix Data Collection (ต้องไปสร้าง Collection ชื่อ MekongYouth ใน Wix)
     const response = await fetch(`${BASE_URL}/mekong_youth`).catch(() => null)
     if (!response || !response.ok) {
-      youthData.value = MOCK_YOUTH_DATA
+      youthData.value = []
       return
     }
     const result = await response.json()
     const items = result.items || result.data || result
-    
+
     if (Array.isArray(items) && items.length > 0) {
-      youthData.value = items.map(item => {
+      const sortedItems = items.sort((a, b) => new Date(a._createdDate || 0) - new Date(b._createdDate || 0))
+      youthData.value = sortedItems.map((item) => {
         // ประมวลผล Array รูปภาพ ถ้า Wix ส่งมาเป็น comma-separated หรือ Array
         let parsedGallery = []
         if (Array.isArray(item.gallery)) {
-          parsedGallery = item.gallery.map(img => convertWixImageUrl(img?.src || img))
+          parsedGallery = item.gallery.map((img) => convertWixImageUrl(img?.src || img))
         } else if (typeof item.gallery === 'string') {
-          parsedGallery = item.gallery.split(',').map(img => convertWixImageUrl(img.trim()))
+          parsedGallery = item.gallery.split(',').map((img) => convertWixImageUrl(img.trim()))
         }
 
         return {
@@ -139,15 +120,15 @@ const fetchData = async () => {
           date: item.date || item._createdDate || '',
           description: formatDescription(item.description),
           videoUrl: getEmbedUrl(item.videoUrl || item.video),
-          gallery: parsedGallery
+          gallery: parsedGallery,
         }
       })
     } else {
-      youthData.value = MOCK_YOUTH_DATA
+      youthData.value = []
     }
   } catch (error) {
-    console.warn('Error fetching mekong youth data, using mock', error)
-    youthData.value = MOCK_YOUTH_DATA
+    console.warn('Error fetching mekong youth data', error)
+    youthData.value = []
   } finally {
     loadingData.value = false
   }
@@ -166,16 +147,17 @@ onUnmounted(() => {
 
 <template>
   <main class="min-h-screen bg-[#f4f1ea] font-sans">
-    
     <!-- Navbar (Absolute positioned over hero) -->
     <Navbar />
 
     <!-- Hero Section -->
-    <section class="relative w-full h-[65vh] min-h-[250px] flex items-center justify-center overflow-hidden">
+    <section
+      class="relative w-full h-[65vh] min-h-[250px] flex items-center justify-center overflow-hidden"
+    >
       <!-- Background Image -->
       <div class="absolute inset-0 z-0">
-        <img 
-          src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2000&auto=format&fit=crop" 
+        <img
+          src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2000&auto=format&fit=crop"
           class="w-full h-full object-cover object-center"
           alt="Mekong Youth"
           loading="eager"
@@ -185,27 +167,36 @@ onUnmounted(() => {
       </div>
 
       <!-- Hero Content -->
-      <div class="relative z-10 max-w-7xl mx-auto px-4 md:px-8 w-full mt-8 text-center flex justify-center items-center h-full">
-        <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-wider flex items-center justify-center min-w-[280px] md:min-w-[450px]" style="text-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-          <span 
-            v-for="(char, i) in displayedText" 
+      <div
+        class="relative z-10 max-w-7xl mx-auto px-4 md:px-8 w-full mt-8 text-center flex justify-center items-center h-full"
+      >
+        <h1
+          class="text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-wider flex items-center justify-center min-w-[280px] md:min-w-[450px]"
+          style="text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3)"
+        >
+          <span
+            v-for="(char, i) in displayedText"
             :key="i"
             class="text-white"
-            style="white-space: pre;"
-          >{{ char }}</span>
+            style="white-space: pre"
+            >{{ char }}</span
+          >
           <span class="text-[#FF5C39] cursor-blink ml-1 -mt-2">|</span>
         </h1>
       </div>
-      <div class="absolute bottom-0 left-0 w-full h-10 md:h-30 bg-gradient-to-t from-[#f4f1ea] via-[#f4f1ea]/200 to-transparent z-10 pointer-events-none"></div>
+      <div
+        class="absolute bottom-0 left-0 w-full h-10 md:h-30 bg-gradient-to-t from-[#f4f1ea] via-[#f4f1ea]/200 to-transparent z-10 pointer-events-none"
+      ></div>
     </section>
 
     <!-- Content Section -->
     <section class="relative z-20 w-full bg-[#f4f1ea] py-24 px-4 md:px-8 pb-32">
       <div class="max-w-5xl mx-auto flex flex-col gap-16">
-        
         <!-- Header -->
         <div class="w-full text-center" data-aos="fade-up">
-          <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-stone-900 tracking-tighter flex justify-center items-baseline gap-1">
+          <h2
+            class="text-4xl md:text-5xl lg:text-6xl font-black text-stone-900 tracking-tighter flex justify-center items-baseline gap-1"
+          >
             YOUTH ACTIVITIES<span class="text-[#FF5C39] text-5xl leading-none">.</span>
           </h2>
           <p class="text-stone-500 font-medium mt-4 max-w-2xl mx-auto">
@@ -215,7 +206,11 @@ onUnmounted(() => {
 
         <!-- Activities (Loading State) -->
         <div v-if="loadingData" class="space-y-24 mt-8">
-          <div v-for="i in 2" :key="i" class="animate-pulse bg-white rounded-3xl p-8 border border-stone-200 shadow-sm">
+          <div
+            v-for="i in 2"
+            :key="i"
+            class="animate-pulse bg-white rounded-3xl p-8 border border-stone-200 shadow-sm"
+          >
             <div class="w-1/3 h-8 bg-stone-300 rounded mb-4"></div>
             <div class="w-1/4 h-4 bg-stone-200 rounded mb-8"></div>
             <div class="w-full h-24 bg-stone-200 rounded mb-8"></div>
@@ -228,60 +223,70 @@ onUnmounted(() => {
 
         <!-- Activities (Data Loaded) -->
         <div v-else class="space-y-20 mt-8">
-          <div 
-            v-for="(item, index) in youthData" 
+          <div
+            v-for="(item, index) in youthData"
             :key="item.id || index"
-            class="bg-white rounded-[40px] p-6 md:p-12 shadow-sm border border-stone-100 hover:shadow-md transition-shadow duration-300" 
+            class="bg-white rounded-[40px] p-6 md:p-12 shadow-sm border border-stone-100 hover:shadow-md transition-shadow duration-300"
             data-aos="fade-up"
           >
             <!-- Title & Date -->
             <div class="mb-8 border-b border-stone-100 pb-6">
               <h3 class="text-2xl md:text-3xl font-bold text-stone-900 mb-2">{{ item.title }}</h3>
               <p v-if="item.date" class="text-[#FF5C39] font-medium flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  ></path>
+                </svg>
                 {{ item.date }}
               </p>
             </div>
-            
+
             <!-- Description -->
-            <div class="text-stone-700 leading-relaxed text-base md:text-lg mb-10 text-justify md:text-left">
+            <div
+              class="text-stone-700 leading-relaxed text-base md:text-lg mb-10 text-justify md:text-left break-words overflow-hidden"
+            >
               <div v-html="item.description" class="space-y-4"></div>
             </div>
-            
+
             <!-- Image Gallery -->
             <div v-if="item.gallery && item.gallery.length > 0">
-              <h4 class="text-sm font-bold text-stone-400 tracking-widest uppercase mb-4">Gallery</h4>
+              <h4 class="text-sm font-bold text-stone-400 tracking-widest uppercase mb-4">
+                Gallery
+              </h4>
               <!-- CSS Grid for Gallery: Dynamically adjusts based on number of images -->
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div 
-                  v-for="(imgSrc, imgIndex) in item.gallery" 
-                  :key="imgIndex" 
+                <div
+                  v-for="(imgSrc, imgIndex) in item.gallery"
+                  :key="imgIndex"
                   class="aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-stone-200 group cursor-pointer"
                 >
-                  <img 
-                    :src="imgSrc" 
-                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                  <img
+                    :src="imgSrc"
+                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     :alt="`Gallery image ${imgIndex + 1}`"
                     loading="lazy"
                     decoding="async"
-                  >
+                  />
                 </div>
               </div>
             </div>
-
           </div>
         </div>
-        
       </div>
     </section>
 
     <!-- Video Section (Separated at the bottom) -->
     <section class="relative z-20 w-full bg-white py-24 px-4 md:px-8 border-t border-stone-200">
       <div class="max-w-7xl mx-auto flex flex-col gap-16">
-        
         <!-- Header -->
         <div class="w-full text-center" data-aos="fade-up">
-          <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-stone-900 tracking-tighter flex justify-center items-baseline gap-1">
+          <h2
+            class="text-4xl md:text-5xl lg:text-6xl font-black text-stone-900 tracking-tighter flex justify-center items-baseline gap-1"
+          >
             MULTIMEDIA<span class="text-[#FF5C39] text-5xl leading-none">.</span>
           </h2>
           <p class="text-stone-500 font-medium mt-4 max-w-2xl mx-auto">
@@ -292,13 +297,24 @@ onUnmounted(() => {
         <!-- Video Grid -->
         <div v-if="!loadingData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           <template v-for="(item, index) in youthData" :key="`video-${item.id || index}`">
-            <div v-if="item.videoUrl" class="bg-[#f4f1ea] rounded-3xl p-4 shadow-sm border border-stone-100 hover:shadow-md transition-shadow" data-aos="fade-up">
+            <div
+              v-if="item.videoUrl"
+              class="bg-[#f4f1ea] rounded-3xl p-4 shadow-sm border border-stone-100 hover:shadow-md transition-shadow"
+              data-aos="fade-up"
+            >
               <div class="aspect-video w-full rounded-2xl overflow-hidden bg-stone-200">
-                <iframe 
-                  :src="item.videoUrl" 
-                  class="w-full h-full" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                <iframe
+                  :src="item.videoUrl"
+                  class="w-full h-full"
+                  frameborder="0"
+                  allow="
+                    accelerometer;
+                    autoplay;
+                    clipboard-write;
+                    encrypted-media;
+                    gyroscope;
+                    picture-in-picture;
+                  "
                   allowfullscreen
                   loading="lazy"
                   title="วิดีโอกิจกรรม"
@@ -313,18 +329,21 @@ onUnmounted(() => {
 
     <!-- Footer -->
     <Footer />
-
   </main>
 </template>
 
 <style scoped>
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 .cursor-blink {
   animation: blink 1s step-end infinite;
   font-weight: 300;
 }
 </style>
-

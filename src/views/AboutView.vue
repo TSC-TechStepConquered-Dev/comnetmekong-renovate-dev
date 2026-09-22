@@ -50,50 +50,22 @@ const staffs = ref([])
 const loadingStaff = ref(true)
 const BASE_URL = import.meta.env.VITE_WIX_BASE_URL || 'https://www.comnetmekong.org/_functions'
 
-const MOCK_STAFF = [
-  {
-    id: 1,
-    name: 'Somkiat Phanthasub',
-    role: 'Director & River Advocate',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=250&auto=format&fit=crop',
-    email: 'contact@comnetmekong.org'
-  },
-  {
-    id: 2,
-    name: 'Thipawan Kaewmanee',
-    role: 'Research & Youth Lead',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=250&auto=format&fit=crop',
-    email: 'contact@comnetmekong.org'
-  },
-  {
-    id: 3,
-    name: 'Niwat Roykaew',
-    role: 'Community Coordinator',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=250&auto=format&fit=crop',
-    email: 'contact@comnetmekong.org'
-  },
-  {
-    id: 4,
-    name: 'Kamonwan Chaisri',
-    role: 'Media & Communications',
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=250&auto=format&fit=crop',
-    email: 'contact@comnetmekong.org'
-  }
-]
+
 
 const fetchStaff = async () => {
   try {
     // กำหนดให้ดึงข้อมูลจาก endpoint /staff ที่เดี๋ยวคุณต้องไปสร้างใน Wix
     const response = await fetch(`${BASE_URL}/staff`).catch(() => null)
     if (!response || !response.ok) {
-      staffs.value = MOCK_STAFF
+      staffs.value = []
       return
     }
     const result = await response.json()
     const items = result.items || result.data || result
     
     if (Array.isArray(items) && items.length > 0) {
-      staffs.value = items.map(item => ({
+      const sortedItems = items.sort((a, b) => new Date(a._createdDate || 0) - new Date(b._createdDate || 0))
+      staffs.value = sortedItems.map(item => ({
         id: item._id,
         name: item.name,
         role: item.role,
@@ -101,11 +73,11 @@ const fetchStaff = async () => {
         email: item.email || item.contact || '#'
       }))
     } else {
-      staffs.value = MOCK_STAFF
+      staffs.value = []
     }
   } catch (error) {
-    console.warn('Error fetching staff, using mock', error)
-    staffs.value = MOCK_STAFF
+    console.warn('Error fetching staff', error)
+    staffs.value = []
   } finally {
     loadingStaff.value = false
   }
@@ -115,52 +87,6 @@ const fetchStaff = async () => {
 const ourWorks = ref([])
 const loadingOurWorks = ref(true)
 
-const MOCK_OUR_WORKS = [
-  {
-    id: 1,
-    index: '01',
-    category: 'Initiative',
-    title: 'Save the Mekong',
-    description: `According to the current situations of the Mekong river including the issue of numerous ecosystems lose and the issue of unseasonable water level fluctuation, these issues need to be concerned critically as their effects have massively affected over 1,400 local communities (calculated from the overall Northeastern region scale of Thailand) along the Mekong river and people in the communities who rely their lives on this main river for lifetime.\n\nBased on our researches and interviews, the main causes of these issues are climate change and the numerous huge constructions on the Mekong river such as dams and massive constructions relate to tourism and its attraction sites that assumed to block the fish and other small aquatic animals' pathways, invade the habitats and encroach their food chains together with resulting the water level to be abnormal.\n\nThe specific purposes of our works are to improve the quality of lives for people who live along the Mekong river whether they are fishermen, agriculturists, farmers, local-traders, youths and elder & to protect, conserve, and restore the biodiversity and ecosystem of the Mekong River to be plenteous as before.`,
-    quoteText: '',
-    quoteAuthor: '',
-    image1: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800&auto=format&fit=crop',
-    image2: 'https://images.unsplash.com/photo-1528181304800-259b08848526?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    id: 2,
-    index: '02',
-    category: 'Initiative',
-    title: 'Disaster Management',
-    description: `Due to the several huge constructions in the Mekong and the issue of climate change, both man-made disasters and natural disasters, which include drought and flood, have been brought to the Mekong river mainstream and its tributaries. This results villagers along the Mekong river to be essentially suffered.`,
-    quoteText: 'I used to plant yam, spring onions, and several vegetables nearby the Mekong. But once the flood came, all my vegetables are destroyed and some part of my land was taken with the flood',
-    quoteAuthor: 'Mrs. Soodjai Vilandon, a villager in Ban Muang Village, Nong Khai, Thailand',
-    image1: 'https://images.unsplash.com/photo-1547683905-f686c993aae5?q=80&w=1200&auto=format&fit=crop',
-    image2: ''
-  },
-  {
-    id: 3,
-    index: '03',
-    category: 'Initiative',
-    title: 'Support Children & Youths in Needs',
-    description: `Equitable Education Fund (EEF) provided the fund to work, assist, promote, develop and support the children and youths who are from low-income families, who were once misled by society or poor influences, and who have limited opportunities to access educational system, to received the opportunities of training and earning knowledge in order to capable of being employed and getting the jobs based on their capabilities.`,
-    quoteText: '',
-    quoteAuthor: '',
-    image1: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1200&auto=format&fit=crop',
-    image2: ''
-  },
-  {
-    id: 4,
-    index: '04',
-    category: 'Initiative',
-    title: 'Housing Restoration & Online-Deceptive Trading Prevention for Elderly',
-    description: `With the collaboration between the Provincial Development Network Centre and ComNetMekong, the elderly with various difficulties such as bedridden elderly, abandoned elderly, and elderly who have to live in housing insecurity condition are going to be the main focus groups on our works.\n\nFurthermore, ComNetMekong have received fund from Thai Media Fund in order to survey and provide basic knowledge to elderly who got deceived from media. In the process of surveying, ComNetMekong uses the local community networks to collect and process the data so that the data would be accurate and reliable.`,
-    quoteText: '',
-    quoteAuthor: '',
-    image1: 'https://images.unsplash.com/photo-1502444330042-d1a1ddf971b1?q=80&w=800&auto=format&fit=crop',
-    image2: 'https://images.unsplash.com/photo-1516383740770-fbcc5ccbece0?q=80&w=800&auto=format&fit=crop'
-  }
-]
 
 // Helper: Convert wix:image:// URL to standard https URL
 const convertWixImageUrl = (wixUrl) => {
@@ -191,7 +117,7 @@ const fetchOurWork = async () => {
   try {
     const response = await fetch(`${BASE_URL}/about_works`).catch(() => null)
     if (!response || !response.ok) {
-      ourWorks.value = MOCK_OUR_WORKS
+      ourWorks.value = []
       return
     }
     const result = await response.json()
@@ -213,11 +139,11 @@ const fetchOurWork = async () => {
         image2: convertWixImageUrl(item.image2 || '')
       }))
     } else {
-      ourWorks.value = MOCK_OUR_WORKS
+      ourWorks.value = []
     }
   } catch (error) {
-    console.warn('Error fetching our works, using mock', error)
-    ourWorks.value = MOCK_OUR_WORKS
+    console.warn('Error fetching our works', error)
+    ourWorks.value = []
   } finally {
     loadingOurWorks.value = false
   }
@@ -341,7 +267,7 @@ onUnmounted(() => {
               <h3 class="text-sm font-bold text-[#FF5C39] tracking-widest uppercase mb-3">{{ item.index }} &bull; {{ item.category }}</h3>
               <h4 class="text-2xl md:text-3xl font-bold text-stone-900 mb-6 leading-tight">{{ item.title }}</h4>
               
-              <div class="text-stone-700 leading-relaxed space-y-6 text-base md:text-lg mb-8 text-justify md:text-left">
+              <div class="text-stone-700 leading-relaxed space-y-6 text-base md:text-lg mb-8 text-justify md:text-left break-words overflow-hidden">
                 <!-- Rich Text Content -->
                 <div v-html="item.description" class="space-y-4"></div>
                 
