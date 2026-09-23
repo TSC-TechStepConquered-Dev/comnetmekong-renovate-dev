@@ -7,7 +7,7 @@ import RegisterForm from '../../presentation/components/auth/RegisterForm.vue'
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
       <img 
-        src="../../assets/reg_bg.png" 
+        src="../../assets/reg_bg.webp" 
         alt="Mekong River" 
         class="w-full h-full object-cover"
       />

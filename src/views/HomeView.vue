@@ -1,7 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { ENV } from '@/config/env'
+import { convertWixImageUrl } from '@/utils/wix-image'
 import { useHead } from '@vueuse/head'
+import { generateSEO } from '@/utils/seo'
 import { WixBlogRepository } from '../infrastructure/repositories/wix-blog.repository'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
@@ -9,9 +11,11 @@ import { useBlogStore } from '../presentation/stores/blog'
 
 useHead({
   title: 'COMNETMEKONG - หน้าแรก',
-  meta: [
-    { name: 'description', content: 'เครือข่าย COMNETMEKONG พื้นที่เชื่อมโยงชุมชนและเยาวชนเพื่อการอนุรักษ์แม่น้ำโขง' },
-  ]
+  meta: generateSEO({
+    title: 'COMNETMEKONG - หน้าแรก',
+    description: 'เครือข่าย COMNETMEKONG พื้นที่เชื่อมโยงชุมชนและเยาวชนเพื่อการอนุรักษ์แม่น้ำโขง',
+    url: 'https://www.comnetmekong.org/'
+  })
 })
 
 const blogStore = useBlogStore()
@@ -75,19 +79,7 @@ onMounted(async () => {
   fetchDonors()
 })
 
-// Helper: Convert wix:image:// URL to standard https URL
-const convertWixImageUrl = (wixUrl) => {
-  if (!wixUrl) return ''
-  if (typeof wixUrl !== 'string') return ''
-  if (wixUrl.startsWith('http')) return wixUrl
-  if (wixUrl.startsWith('wix:image://v1/')) {
-    const parts = wixUrl.split('/')
-    if (parts.length >= 4) {
-      return `https://static.wixstatic.com/media/${parts[3]}`
-    }
-  }
-  return wixUrl
-}
+
 
 // Donors Data Fetching
 const donors = ref([])

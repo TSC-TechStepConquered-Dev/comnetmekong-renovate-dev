@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useHead } from '@vueuse/head'
+import { generateSEO } from '@/utils/seo'
 import { useBlogStore } from '../presentation/stores/blog'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
@@ -9,9 +10,11 @@ const blogStore = useBlogStore()
 
 useHead({
   title: 'บทความและข่าวสาร - COMNETMEKONG',
-  meta: [
-    { name: 'description', content: 'อ่านบทความ ข่าวสาร และเรื่องราวความเคลื่อนไหวจากเครือข่าย COMNETMEKONG' },
-  ]
+  meta: generateSEO({
+    title: 'บทความและข่าวสาร - COMNETMEKONG',
+    description: 'อ่านบทความ ข่าวสาร และเรื่องราวความเคลื่อนไหวจากเครือข่าย COMNETMEKONG',
+    url: 'https://www.comnetmekong.org/blogs'
+  })
 })
 
 const blogs = ref([])

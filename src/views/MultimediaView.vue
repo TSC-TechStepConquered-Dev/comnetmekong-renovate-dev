@@ -1,20 +1,20 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { ENV } from '@/config/env'
+import { convertWixImageUrl } from '@/utils/wix-image'
 import { useHead } from '@vueuse/head'
+import { generateSEO } from '@/utils/seo'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 
 // SEO Meta
 useHead({
   title: 'มัลติมีเดีย - COMNETMEKONG',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'คลังภาพถ่าย วิดีโอ และสื่อสร้างสรรค์ บอกเล่าเรื่องราวสายน้ำและวิถีชีวิตคนลุ่มน้ำโขง',
-    },
-  ],
+  meta: generateSEO({
+    title: 'มัลติมีเดีย - COMNETMEKONG',
+    description: 'คลังภาพถ่าย วิดีโอ และสื่อสร้างสรรค์ บอกเล่าเรื่องราวสายน้ำและวิถีชีวิตคนลุ่มน้ำโขง',
+    url: 'https://www.comnetmekong.org/multimedia'
+  })
 })
 
 // Typing Animation Logic (Hero Section)
@@ -53,18 +53,7 @@ const typeText = async () => {
 }
 
 // Helpers
-const convertWixImageUrl = (wixUrl) => {
-  if (!wixUrl) return ''
-  if (typeof wixUrl !== 'string') return ''
-  if (wixUrl.startsWith('http')) return wixUrl
-  if (wixUrl.startsWith('wix:image://v1/')) {
-    const parts = wixUrl.split('/')
-    if (parts.length >= 4) {
-      return `https://static.wixstatic.com/media/${parts[3]}`
-    }
-  }
-  return `https://static.wixstatic.com/media/${wixUrl}`
-}
+
 
 const stripHtml = (html) => {
   if (!html) return ''
@@ -145,7 +134,7 @@ const fetchMultimedia = async () => {
 
     if (Array.isArray(rawItems) && rawItems.length > 0) {
       mediaItems.value = rawItems.map((item) => {
-        const cover = convertWixImageUrl(item.coverImage || item.thumbnail || item.image)
+        const cover = convertWixImageUrl(item.coverImage || item.thumbnail || item.image, true)
         let gallery = []
 
         // Parse gallery if exists
@@ -154,13 +143,13 @@ const fetchMultimedia = async () => {
             .map((g) => {
               if (typeof g === 'object' && g !== null) {
                 return {
-                  url: convertWixImageUrl(g.src || g.url || g.image),
+                  url: convertWixImageUrl(g.src || g.url || g.image, true),
                   title: g.title || '',
                   description: stripHtml(g.description || ''),
                 }
               }
               return {
-                url: convertWixImageUrl(g),
+                url: convertWixImageUrl(g, true),
                 title: '',
                 description: '',
               }
@@ -294,7 +283,7 @@ onUnmounted(() => {
       <!-- Background Image -->
       <div class="absolute inset-0 z-0">
         <img
-          src="../assets/about_bg.jpg"
+          src="../assets/about_bg.avif"
           class="w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-out"
           alt="Mekong River Multimedia"
           loading="eager"

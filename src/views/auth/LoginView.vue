@@ -7,7 +7,7 @@ import LoginForm from '../../presentation/components/auth/LoginForm.vue'
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
       <img 
-        src="../../assets/reg_bg.png" 
+        src="../../assets/reg_bg.webp" 
         alt="Mekong River" 
         class="w-full h-full object-cover"
       />

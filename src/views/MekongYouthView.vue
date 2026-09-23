@@ -1,7 +1,9 @@
 <script setup>
 import { onMounted, ref, onUnmounted } from 'vue'
 import { ENV } from '@/config/env'
+import { convertWixImageUrl } from '@/utils/wix-image'
 import { useHead } from '@vueuse/head'
+import { generateSEO } from '@/utils/seo'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 
@@ -11,9 +13,11 @@ let isTypingActive = true
 
 useHead({
   title: 'Mekong Youth - COMNETMEKONG',
-  meta: [
-    { name: 'description', content: 'กิจกรรมเยาวชนเพื่อการอนุรักษ์ลุ่มน้ำโขง (Mekong Youth)' },
-  ],
+  meta: generateSEO({
+    title: 'Mekong Youth - COMNETMEKONG',
+    description: 'กิจกรรมเยาวชนเพื่อการอนุรักษ์ลุ่มน้ำโขง (Mekong Youth)',
+    url: 'https://www.comnetmekong.org/mekong-youth'
+  })
 })
 
 const typeText = async () => {
@@ -41,19 +45,7 @@ const BASE_URL = ENV.WIX_BASE_URL
 
 
 
-// Helper: Convert wix:image:// URL to standard https URL
-const convertWixImageUrl = (wixUrl) => {
-  if (!wixUrl) return ''
-  if (typeof wixUrl !== 'string') return ''
-  if (wixUrl.startsWith('http')) return wixUrl
-  if (wixUrl.startsWith('wix:image://v1/')) {
-    const parts = wixUrl.split('/')
-    if (parts.length >= 4) {
-      return `https://static.wixstatic.com/media/${parts[3]}`
-    }
-  }
-  return wixUrl
-}
+
 
 // Helper: Format text to HTML if it's plain text
 const formatDescription = (text) => {

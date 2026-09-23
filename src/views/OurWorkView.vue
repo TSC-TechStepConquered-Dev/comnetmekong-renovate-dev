@@ -1,7 +1,9 @@
 <script setup>
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { ENV } from '@/config/env'
+import { convertWixImageUrl } from '@/utils/wix-image'
 import { useHead } from '@vueuse/head'
+import { generateSEO } from '@/utils/seo'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 import PdfEbookViewer from '../presentation/components/ui/PdfEbookViewer.vue'
@@ -13,12 +15,11 @@ let isTypingActive = false
 
 useHead({
   title: 'งานของเรา - COMNETMEKONG',
-  meta: [
-    {
-      name: 'description',
-      content: 'ผลงานและกิจกรรมของเครือข่าย COMNETMEKONG ที่เชื่อมชุมชน รักษาแม่น้ำโขง',
-    },
-  ],
+  meta: generateSEO({
+    title: 'งานของเรา - COMNETMEKONG',
+    description: 'ผลงานและกิจกรรมของเครือข่าย COMNETMEKONG ที่เชื่อมชุมชน รักษาแม่น้ำโขง',
+    url: 'https://www.comnetmekong.org/our-work'
+  })
 })
 
 const typeText = async () => {
@@ -61,18 +62,7 @@ const loadingResearch = ref(true)
 const selectedResearch = ref(null)
 
 // Helper: Convert wix:image:// URL to standard https URL
-const convertWixImageUrl = (wixUrl) => {
-  if (!wixUrl) return ''
-  if (typeof wixUrl !== 'string') return ''
-  if (wixUrl.startsWith('http')) return wixUrl
-  if (wixUrl.startsWith('wix:image://v1/')) {
-    const parts = wixUrl.split('/')
-    if (parts.length >= 4) {
-      return `https://static.wixstatic.com/media/${parts[3]}`
-    }
-  }
-  return wixUrl
-}
+
 
 // Helper: Convert wix:document:// URL to standard https URL
 const convertWixFileUrl = (wixUrl) => {

@@ -2,14 +2,17 @@
 import { onMounted, ref } from 'vue'
 import { ENV } from '@/config/env'
 import { useHead } from '@vueuse/head'
+import { generateSEO } from '@/utils/seo'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
 
 useHead({
   title: 'การบริจาค - COMNETMEKONG',
-  meta: [
-    { name: 'description', content: 'ร่วมสนับสนุนการทำงานของสมาคมเครือข่ายสภาองค์กรชุมชนลุ่มน้ำโขง' },
-  ]
+  meta: generateSEO({
+    title: 'การบริจาค - COMNETMEKONG',
+    description: 'ร่วมสนับสนุนการทำงานของสมาคมเครือข่ายสภาองค์กรชุมชนลุ่มน้ำโขง',
+    url: 'https://www.comnetmekong.org/donate'
+  })
 })
 
 const fullText = 'DONATE.'
@@ -156,7 +159,7 @@ onUnmounted(() => {
       <div class="absolute inset-0 z-0">
         <!-- Using a placeholder image that matches the aesthetic -->
         <img 
-          src="../assets/about_bg.jpg" 
+          src="../assets/about_bg.avif" 
           alt="Mekong River" 
           class="w-full h-full object-cover brightness-[0.55]"
         />
