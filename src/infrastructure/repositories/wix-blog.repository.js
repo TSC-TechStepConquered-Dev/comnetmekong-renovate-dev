@@ -158,15 +158,16 @@ export class WixBlogRepository {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ postId: id }),
-      })
+      }).catch(() => null)
 
       if (!response || !response.ok) {
-        throw new Error('ไม่สามารถอัปเดตข้อมูลการกดถูกใจได้')
+        console.warn('Backend API /toggleLike failed, using frontend fallback.');
+        return null;
       }
       return await response.json()
-      // oxlint-disable-next-line no-useless-catch
     } catch (error) {
-      throw error
+      console.warn('Backend API /toggleLike failed, using frontend fallback.', error);
+      return null;
     }
   }
 

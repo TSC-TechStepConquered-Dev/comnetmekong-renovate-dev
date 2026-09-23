@@ -330,6 +330,11 @@ const deleteComment = (commentId) => {
   })
 }
 
+const handleDeleteComment = (commentId) => {
+  activeMenuId.value = null
+  deleteComment(commentId)
+}
+
 const handleShare = async () => {
   const shareData = {
     title: blog.value?.title,
@@ -659,10 +664,7 @@ const handleShare = async () => {
                           แก้ไข
                         </button>
                         <button
-                          @click.stop="
-                            activeMenuId = null
-                            deleteComment(comment.id)
-                          "
+                          @click.stop="handleDeleteComment(comment.id)"
                           class="w-full px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2.5 transition-colors"
                         >
                           <svg
