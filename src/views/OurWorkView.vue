@@ -18,8 +18,8 @@ useHead({
   meta: generateSEO({
     title: 'งานของเรา - COMNETMEKONG',
     description: 'ผลงานและกิจกรรมของเครือข่าย COMNETMEKONG ที่เชื่อมชุมชน รักษาแม่น้ำโขง',
-    url: 'https://www.comnetmekong.org/our-work'
-  })
+    url: 'https://www.comnetmekong.org/our-work',
+  }),
 })
 
 const typeText = async () => {
@@ -62,7 +62,6 @@ const loadingResearch = ref(true)
 const selectedResearch = ref(null)
 
 // Helper: Convert wix:image:// URL to standard https URL
-
 
 // Helper: Convert wix:document:// URL to standard https URL
 const convertWixFileUrl = (wixUrl) => {
@@ -181,14 +180,14 @@ onUnmounted(() => {
       <div class="absolute inset-0 z-0">
         <!-- Using about_bg.jpg or Unsplash placeholder -->
         <img
-          src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2000&auto=format&fit=crop"
-          class="w-full h-full object-cover object-center"
+          src="../assets/our_work.png"
+          class="w-full h-full object-cover object-center brightness-[0.60]"
           alt="Our Work Background"
           loading="eager"
           decoding="async"
         />
         <!-- Dark overlay to make text readable -->
-        <div class="absolute inset-0 bg-stone-900/50 mix-blend-multiply"></div>
+        <div class="absolute inset-0 bg-stone-900/40 mix-blend-multiply"></div>
       </div>
 
       <!-- Hero Content -->

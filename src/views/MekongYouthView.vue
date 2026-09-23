@@ -16,8 +16,8 @@ useHead({
   meta: generateSEO({
     title: 'Mekong Youth - COMNETMEKONG',
     description: 'กิจกรรมเยาวชนเพื่อการอนุรักษ์ลุ่มน้ำโขง (Mekong Youth)',
-    url: 'https://www.comnetmekong.org/mekong-youth'
-  })
+    url: 'https://www.comnetmekong.org/mekong-youth',
+  }),
 })
 
 const typeText = async () => {
@@ -42,10 +42,6 @@ const typeText = async () => {
 const youthData = ref([])
 const loadingData = ref(true)
 const BASE_URL = ENV.WIX_BASE_URL
-
-
-
-
 
 // Helper: Format text to HTML if it's plain text
 const formatDescription = (text) => {
@@ -97,7 +93,9 @@ const fetchData = async () => {
     const items = result.items || result.data || result
 
     if (Array.isArray(items) && items.length > 0) {
-      const sortedItems = items.sort((a, b) => new Date(a._createdDate || 0) - new Date(b._createdDate || 0))
+      const sortedItems = items.sort(
+        (a, b) => new Date(a._createdDate || 0) - new Date(b._createdDate || 0),
+      )
       youthData.value = sortedItems.map((item) => {
         // ประมวลผล Array รูปภาพ ถ้า Wix ส่งมาเป็น comma-separated หรือ Array
         let parsedGallery = []
@@ -150,7 +148,7 @@ onUnmounted(() => {
       <!-- Background Image -->
       <div class="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2000&auto=format&fit=crop"
+          src="../assets/P1311198.avif"
           class="w-full h-full object-cover object-center"
           alt="Mekong Youth"
           loading="eager"

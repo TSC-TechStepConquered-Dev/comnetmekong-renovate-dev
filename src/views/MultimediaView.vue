@@ -12,9 +12,10 @@ useHead({
   title: 'มัลติมีเดีย - COMNETMEKONG',
   meta: generateSEO({
     title: 'มัลติมีเดีย - COMNETMEKONG',
-    description: 'คลังภาพถ่าย วิดีโอ และสื่อสร้างสรรค์ บอกเล่าเรื่องราวสายน้ำและวิถีชีวิตคนลุ่มน้ำโขง',
-    url: 'https://www.comnetmekong.org/multimedia'
-  })
+    description:
+      'คลังภาพถ่าย วิดีโอ และสื่อสร้างสรรค์ บอกเล่าเรื่องราวสายน้ำและวิถีชีวิตคนลุ่มน้ำโขง',
+    url: 'https://www.comnetmekong.org/multimedia',
+  }),
 })
 
 // Typing Animation Logic (Hero Section)
@@ -53,7 +54,6 @@ const typeText = async () => {
 }
 
 // Helpers
-
 
 const stripHtml = (html) => {
   if (!html) return ''
@@ -116,6 +116,11 @@ watch([isLightboxOpen, isVideoModalOpen], ([lightbox, video]) => {
     document.body.style.overflow = 'auto'
   }
 })
+
+const clearFilters = () => {
+  searchQuery.value = ''
+  activeFilter.value = 'all'
+}
 
 // Data Fetching
 const BASE_URL = ENV.WIX_BASE_URL
@@ -272,7 +277,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-[#f4f1ea] font-sans text-stone-800">
+  <main class="min-h-screen bg-[#f4f1ea] font-sans">
     <!-- Navbar (Absolute positioned over hero) -->
     <Navbar />
 
@@ -283,19 +288,19 @@ onUnmounted(() => {
       <!-- Background Image -->
       <div class="absolute inset-0 z-0">
         <img
-          src="../assets/about_bg.avif"
-          class="w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-out"
+          src="../assets/multimedia.jpg"
+          class="w-full h-full object-cover object-center brightness-[0.60]"
           alt="Mekong River Multimedia"
           loading="eager"
           decoding="async"
         />
         <!-- Dark overlay to make text and navbar readable -->
-        <div class="absolute inset-0 bg-stone-900/50 mix-blend-multiply"></div>
+        <div class="absolute inset-0 bg-stone-900/40 mix-blend-multiply"></div>
       </div>
 
       <!-- Hero Content -->
       <div
-        class="relative z-10 max-w-7xl mx-auto px-4 md:px-8 w-full mt-8 text-center flex flex-col justify-center items-center h-full"
+        class="relative z-10 max-w-5xl mx-auto px-4 md:px-8 w-full mt-16 text-center flex flex-col justify-center items-center h-full"
       >
         <!-- Title with Typing Animation -->
         <h1
@@ -324,7 +329,7 @@ onUnmounted(() => {
 
       <!-- Bottom Gradient Blend -->
       <div
-        class="absolute bottom-0 left-0 w-full h-12 md:h-24 bg-gradient-to-t from-[#f4f1ea] via-[#f4f1ea]/80 to-transparent z-10 pointer-events-none"
+        class="absolute bottom-0 left-0 w-full h-10 md:h-30 bg-gradient-to-t from-[#f4f1ea] via-[#f4f1ea]/200 to-transparent z-10 pointer-events-none"
       ></div>
     </section>
 
@@ -630,7 +635,7 @@ onUnmounted(() => {
           <h3 class="text-xl font-bold text-stone-800">ไม่พบสื่อที่คุณค้นหา</h3>
           <p class="text-stone-500 text-sm mt-1">ลองเปลี่ยนคำค้นหา หรือเลือกหมวดหมู่อื่นดูนะครับ</p>
           <button
-            @click="searchQuery = ''; activeFilter = 'all'"
+            @click="clearFilters"
             class="mt-4 px-6 py-2 bg-stone-900 text-white text-sm font-semibold rounded-full hover:bg-stone-800 transition cursor-pointer"
           >
             ล้างตัวกรองทั้งหมด
