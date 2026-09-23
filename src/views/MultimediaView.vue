@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ENV } from '@/config/env'
 import { useHead } from '@vueuse/head'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
@@ -128,7 +129,7 @@ watch([isLightboxOpen, isVideoModalOpen], ([lightbox, video]) => {
 })
 
 // Data Fetching
-const BASE_URL = import.meta.env.VITE_WIX_BASE_URL || 'https://www.comnetmekong.org/_functions'
+const BASE_URL = ENV.WIX_BASE_URL
 
 const fetchMultimedia = async () => {
   loading.value = true

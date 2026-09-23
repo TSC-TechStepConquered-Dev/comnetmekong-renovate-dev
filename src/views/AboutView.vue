@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref, onUnmounted } from 'vue'
+import { ENV } from '@/config/env'
 import { useHead } from '@vueuse/head'
 import Navbar from '../presentation/components/layout/Navbar.vue'
 import Footer from '../presentation/components/layout/Footer.vue'
@@ -48,7 +49,7 @@ const typeText = async () => {
 // Staff Data Fetching
 const staffs = ref([])
 const loadingStaff = ref(true)
-const BASE_URL = import.meta.env.VITE_WIX_BASE_URL || 'https://www.comnetmekong.org/_functions'
+const BASE_URL = ENV.WIX_BASE_URL
 
 
 

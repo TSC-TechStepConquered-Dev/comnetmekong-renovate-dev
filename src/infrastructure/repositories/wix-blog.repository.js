@@ -1,4 +1,6 @@
-const BASE_URL = import.meta.env.VITE_WIX_BASE_URL
+import { ENV } from '@/config/env'
+
+const BASE_URL = ENV.WIX_BASE_URL
 
 export class WixBlogRepository {
   async getLatestBlogs() {

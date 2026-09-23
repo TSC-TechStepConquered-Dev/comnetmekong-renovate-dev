@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import vue3GoogleLogin from 'vue3-google-login'
 import { createHead } from '@vueuse/head'
+import { ENV } from './config/env'
 
 import App from './App.vue'
 import router from './router'
@@ -15,7 +16,7 @@ app.use(head)
 app.use(createPinia())
 app.use(router)
 app.use(vue3GoogleLogin, {
-  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your_google_client_id_here'
+  clientId: ENV.GOOGLE_CLIENT_ID
 })
 
 app.mount('#app')

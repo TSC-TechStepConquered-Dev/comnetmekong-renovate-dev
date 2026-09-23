@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { ENV } from '@/config/env'
 import { useHead } from '@vueuse/head'
 import { WixBlogRepository } from '../infrastructure/repositories/wix-blog.repository'
 import Navbar from '../presentation/components/layout/Navbar.vue'
@@ -91,7 +92,7 @@ const convertWixImageUrl = (wixUrl) => {
 // Donors Data Fetching
 const donors = ref([])
 const loadingDonors = ref(true)
-const BASE_URL = import.meta.env.VITE_WIX_BASE_URL || 'https://www.comnetmekong.org/_functions'
+const BASE_URL = ENV.WIX_BASE_URL
 
 
 
