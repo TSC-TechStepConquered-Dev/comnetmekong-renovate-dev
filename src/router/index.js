@@ -63,6 +63,11 @@ const router = createRouter({
       component: () => import('../views/BlogDetailView.vue'),
     },
     {
+      path: '/post/:slug',
+      name: 'blog_detail_legacy',
+      component: () => import('../views/BlogDetailView.vue'),
+    },
+    {
       path: ROUTES.DONATE,
       name: 'donate',
       component: () => import('../views/DonateView.vue'),

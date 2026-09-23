@@ -84,7 +84,10 @@ export class WixBlogRepository {
 
   async getBlogById(id) {
     try {
-      const response = await fetch(`${BASE_URL}/postDetail?id=${id}`).catch(() => null)
+      const isObjectId = /^[0-9a-fA-F]{24}$/.test(id);
+      const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
+      const paramName = (isObjectId || isUUID) ? 'id' : 'slug';
+      const response = await fetch(`${BASE_URL}/postDetail?${paramName}=${id}`).catch(() => null)
       if (!response || !response.ok) {
         throw new Error('Blog not found')
       }

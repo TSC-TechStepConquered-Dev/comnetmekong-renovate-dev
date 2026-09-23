@@ -123,7 +123,7 @@ const fetchBlog = async () => {
   loading.value = true
   error.value = ''
   try {
-    const id = route.params.id
+    const id = route.params.id || route.params.slug
     
     // 1. ลองเอาจาก Cache มาโชว์ก่อนเลย (Optimistic UI)
     const cachedBlog = blogStore.getBlogFromCache(id)
